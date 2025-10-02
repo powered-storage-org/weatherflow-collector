@@ -279,6 +279,22 @@ class InfluxDBStorage:
                 logger_InfluxDBStorage.debug(
                     "Timestamp not provided, using current time"
                 )
+            else:
+                # Ensure timestamp is an integer, not float
+                timestamp = int(timestamp)
+                
+                # Validate timestamp is within reasonable range (not too far in future/past)
+                current_time = int(time.time())
+                max_future_time = current_time + 86400  # 24 hours in future
+                min_past_time = current_time - 31536000  # 1 year in past
+                
+                if timestamp > max_future_time or timestamp < min_past_time:
+                    logger_InfluxDBStorage.warning(
+                        f"Timestamp {timestamp} is outside reasonable range. Using current time instead."
+                    )
+                    timestamp = current_time
+                
+                logger_InfluxDBStorage.debug(f"Converted timestamp to integer: {timestamp}")
 
             # Sort tags for consistency
             sorted_tags = dict(sorted(tags.items()))
