@@ -5,6 +5,16 @@
 
 <center><img src="https://labs.lux4rd0.com/wp-content/uploads/2021/05/weatherflow_collector_header.png"></center>
 
+## ⚠️ Security Notice
+
+**IMPORTANT**: This Docker Compose configuration includes Grafana with **anonymous access enabled** for development purposes. 
+
+- **Grafana**: No password required (anonymous admin access)
+- **InfluxDB**: admin/weatherflow123
+- **Production Use**: See [SECURITY_NOTICE.md](SECURITY_NOTICE.md) for production security requirements
+
+**DO NOT** use this configuration in production environments without proper authentication!
+
 **weatherflow-collector** is an application that provides multiple ways of collecting data from the [WeatherFlow Tempest](https://weatherflow.com/tempest-weather-system/) weather system. Once deployed, this collection of Grafana dashboards will help visualize that data. If you're just getting started with Grafana, InfluxDB, and WeatherFlow Tempest, you may want to check out my [WeatherFlow Dashboards AIO](https://github.com/lux4rd0/weatherflow-dashboards-aio) (All In One) project. (It is still being updated.)
 
 A live set of dashboards using this collector [are available](https://labs.lux4rd0.com/weatherflow-collector/) for you to try out.

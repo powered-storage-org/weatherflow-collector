@@ -1,0 +1,140 @@
+name: weatherflow-collector-stack
+
+services:
+  # InfluxDB V2 Database
+  influxdb:
+    image: influxdb:2.7-alpine
+    container_name: weatherflow-influxdb
+    restart: unless-stopped
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=weatherflow123
+      - DOCKER_INFLUXDB_INIT_ORG=weatherflow
+      - DOCKER_INFLUXDB_INIT_BUCKET=weatherflow
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=weatherflow-super-secret-token
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    networks:
+      - weatherflow-network
+
+  # Grafana Dashboard
+  # WARNING: Authentication is disabled for development purposes
+  # DO NOT use this configuration in production environments
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: weatherflow-grafana
+    restart: unless-stopped
+    environment:
+      # Disable authentication for easy access (DEVELOPMENT ONLY)
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=false
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=weatherflow123
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      # Additional settings for anonymous access
+      - GF_AUTH_ANONYMOUS_HIDE_VERSION=true
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_config:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - weatherflow-network
+    depends_on:
+      - influxdb
+
+  # WeatherFlow Collector
+  weatherflow-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: weatherflow-collector
+    restart: unless-stopped
+    environment:
+      # Timezone - Update this to your location
+      - TZ=America/New_York
+
+      # WeatherFlow API Configuration
+      - WEATHERFLOW_COLLECTOR_API_TOKEN=${WEATHERFLOW_API_TOKEN}
+      - WEATHERFLOW_COLLECTOR_API_RATE_LIMIT=15
+
+      # InfluxDB Configuration
+      - WEATHERFLOW_COLLECTOR_INFLUXDB_URL=http://influxdb:8086
+      - WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN=weatherflow-super-secret-token
+      - WEATHERFLOW_COLLECTOR_INFLUXDB_ORG=weatherflow
+      - WEATHERFLOW_COLLECTOR_INFLUXDB_BUCKET=weatherflow
+
+      # Storage Configuration
+      - WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_BATCH_SIZE=2000
+      - WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_FLUSH_INTERVAL=1000
+      - WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_WORKERS=8
+
+      # Collector Configuration
+      - WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_COLLECTOR_UDP_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_COLLECTOR_REST_FORECASTS_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_DEVICE_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_COLLECTOR_REST_STATS_ENABLED=true
+
+      # WebSocket Server Configuration
+      - WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_HOST=0.0.0.0
+      - WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_PORT=6789
+      - WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_MAX_CONNECTIONS=100
+
+      # UDP Configuration
+      - WEATHERFLOW_COLLECTOR_UDP_LISTEN_ADDRESS=0.0.0.0
+      - WEATHERFLOW_COLLECTOR_UDP_COLLECTOR_PORT=50222
+      - WEATHERFLOW_COLLECTOR_UDP_BUFFER_SIZE=4096
+
+      # System Metrics
+      - WEATHERFLOW_COLLECTOR_SYSTEM_METRICS_ENABLED=true
+
+      # Health Checks
+      - WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_FORECAST=true
+      - WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_REST=true
+      - WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_SOCKET=true
+      - WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_UDP=true
+
+      # Logging
+      - WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED=false
+
+    ports:
+      - "50222:50222/udp" # UDP port for local Tempest data
+      - "6789:6789" # WebSocket server port
+    volumes:
+      - weatherflow_logs:/app/weatherflow-collector/logs
+      - weatherflow_data:/app/weatherflow-collector/api_data_saver
+    networks:
+      - weatherflow-network
+    depends_on:
+      - influxdb
+
+volumes:
+  influxdb_data:
+    driver: local
+  influxdb_config:
+    driver: local
+  grafana_data:
+    driver: local
+  grafana_config:
+    driver: local
+  weatherflow_logs:
+    driver: local
+  weatherflow_data:
+    driver: local
+
+networks:
+  weatherflow-network:
+    driver: bridge
