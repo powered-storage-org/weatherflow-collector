@@ -459,6 +459,7 @@ def normalize_fields(fields):
     # Define the normalization map within the function
     normalization_map = {
         "air_temperature": float,
+        "battery": float,
         "daily_precip_sum": float,
         "firmware_revision": int,
         "illuminance": int,
