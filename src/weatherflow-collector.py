@@ -65,6 +65,7 @@ from storage.file import FileStorage
 from handlers.handler import Handler
 from storage.influxdb import InfluxDBStorage
 from handlers.system_metrics import SystemMetricsHandler
+from handlers.current_conditions import CurrentConditionsHandler
 from config_validator import validate_all
 
 # from vineyard_vantage.vineyard_vantage_handler import VineyardVantageHandler
@@ -116,6 +117,11 @@ async def setup_app():
         event_manager.subscribe("system_metrics_event", system_metrics_handler)
     else:
         logger_main.info("system_metrics_event disabled.")
+
+    # Current Conditions Handler - Always enabled to store live weather data
+    logger_main.info("current_conditions_handler enabled.")
+    current_conditions_handler = CurrentConditionsHandler(event_manager)
+    event_manager.subscribe("processed_data_event", current_conditions_handler)
 
     if config.WEATHERFLOW_COLLECTOR_STORAGE_FILE_ENABLED:
         logger_main.info("storage_file enabled.")
