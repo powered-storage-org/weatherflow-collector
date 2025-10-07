@@ -96,12 +96,19 @@ class RestImportCollector:
             if response_data:
                 json_data_stats = json.dumps(response_data)
                 parsed_data_stats = json.loads(json_data_stats)
-                start_date = datetime.strptime(
-                    parsed_data_stats.get("first_ob_day_local"), "%Y-%m-%d"
-                )
-                end_date = datetime.strptime(
-                    parsed_data_stats.get("last_ob_day_local"), "%Y-%m-%d"
-                )
+                
+                first_ob_day = parsed_data_stats.get("first_ob_day_local")
+                last_ob_day = parsed_data_stats.get("last_ob_day_local")
+                
+                if not first_ob_day or not last_ob_day:
+                    logger_RestImportClient.error(
+                        f"Missing date range data for station ID {station_id}. "
+                        f"first_ob_day_local: {first_ob_day}, last_ob_day_local: {last_ob_day}"
+                    )
+                    return None, None
+                
+                start_date = datetime.strptime(first_ob_day, "%Y-%m-%d")
+                end_date = datetime.strptime(last_ob_day, "%Y-%m-%d")
                 return start_date, end_date
             else:
                 logger_RestImportClient.warning(
