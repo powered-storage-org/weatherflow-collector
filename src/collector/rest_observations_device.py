@@ -98,7 +98,10 @@ class RESTObservationsDeviceCollector:
     async def retrieve_and_save_data(self):
         try:
             station_metadata = utils.StationMetadataSingleton().get_metadata()
-            tasks = []
+            
+            # Calculate delay based on API rate limit to avoid 429 errors
+            # API limit is typically 15 requests per minute
+            delay_between_requests = 60.0 / config.WEATHERFLOW_COLLECTOR_API_RATE_LIMIT
 
             for station_id, station_info in station_metadata.items():
                 if station_info.get("enabled", False):
@@ -110,12 +113,12 @@ class RESTObservationsDeviceCollector:
                         ):
                             device_id = device.get("device_id")
                             if device_id:
-                                task = asyncio.create_task(
-                                    self.handle_latest_device_observation(device_id)
+                                await self.handle_latest_device_observation(device_id)
+                                # Add delay between requests to avoid rate limiting
+                                logger_RESTObservationsDeviceCollector.debug(
+                                    f"Waiting {delay_between_requests:.2f} seconds before next request to avoid rate limiting"
                                 )
-                                tasks.append(task)
-
-            await asyncio.gather(*tasks)
+                                await asyncio.sleep(delay_between_requests)
         except Exception as e:
             logger_RESTObservationsDeviceCollector.error(
                 f"Error in retrieve_and_save_data: {e}"

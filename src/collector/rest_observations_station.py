@@ -145,14 +145,19 @@ class RESTObservationsStationCollector:
 
     async def retrieve_and_save_data(self):
         station_metadata = utils.StationMetadataSingleton().get_metadata()
-        tasks = []
+        
+        # Calculate delay based on API rate limit to avoid 429 errors
+        # API limit is typically 15 requests per minute
+        delay_between_requests = 60.0 / config.WEATHERFLOW_COLLECTOR_API_RATE_LIMIT
+        
         for station_id, station_info in station_metadata.items():
             if station_info.get("enabled", False):
-                task = asyncio.create_task(
-                    self.handle_latest_station_observation(station_id)
+                await self.handle_latest_station_observation(station_id)
+                # Add delay between requests to avoid rate limiting
+                logger_RESTObservationsStationCollector.debug(
+                    f"Waiting {delay_between_requests:.2f} seconds before next request to avoid rate limiting"
                 )
-                tasks.append(task)
-        await asyncio.gather(*tasks)
+                await asyncio.sleep(delay_between_requests)
 
     async def run_forever(self):
         logger_RESTObservationsStationCollector.info(

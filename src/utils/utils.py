@@ -612,6 +612,7 @@ async def fetch_data_from_url(url, collector_type, event_manager):
     # Publish the metrics after all attempts, even if all attempts fail
     logger_Utils.debug(f"Metrics for {collector_type}: {metrics_data[collector_type]}")
     await async_publish_metrics(
+        event_manager=event_manager,
         metric_name="fetch_data_from_url",
         module_name=collector_type,
         rate=metrics_data[collector_type]["requests"],
