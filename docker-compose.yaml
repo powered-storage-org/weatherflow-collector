@@ -114,6 +114,8 @@ services:
       - WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED=true
       - WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED=false
 
+      - WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS=WARNING
+
     ports:
       - "50222:50222/udp" # UDP port for local Tempest data
       - "6789:6789" # WebSocket server port
