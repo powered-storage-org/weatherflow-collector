@@ -594,19 +594,19 @@ WEATHERFLOW_API_HTTP_STATION_STATS_URL = f"{WEATHERFLOW_API_BASE_HTTP_URL}/stats
 # Console Log Levels
 
 WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS = {
-    "collector": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "event_manager": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "get_module_logger": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "handlers": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "logger": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "processor": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "protocol": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "provider": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "station_metadata_manager": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "storage": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "utils": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "websockets": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
-    "vineyard_vantage": "INFO" if os.getenv("WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS", "INFO").lower() == "info" else "WARNING",
+    "collector": "INFO",
+    "event_manager": "INFO",
+    "get_module_logger": "INFO",
+    "handlers": "INFO",
+    "logger": "INFO",
+    "processor": "INFO",
+    "protocol": "INFO",
+    "provider": "INFO",
+    "station_metadata_manager": "INFO",
+    "storage": "INFO",
+    "utils": "INFO",
+    "websockets": "INFO",
+    "vineyard_vantage": "INFO",
 }
 
 # File Log Levels
