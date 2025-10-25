@@ -111,8 +111,10 @@ services:
 
       # Logging
       - WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_ENABLED=true
-      - WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED=true
+      - WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED=false
       - WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED=false
+      # Info-only logging mode (uncomment to enable)
+      - WEATHERFLOW_COLLECTOR_LOGGER_INFO_ONLY_MODE=true
 
     ports:
       - "50222:50222/udp" # UDP port for local Tempest data

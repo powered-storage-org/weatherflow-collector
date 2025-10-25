@@ -568,6 +568,10 @@ WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED = (
     os.getenv("WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED", "False").lower() == "true"
 )
 
+WEATHERFLOW_COLLECTOR_LOGGER_INFO_ONLY_MODE = (
+    os.getenv("WEATHERFLOW_COLLECTOR_LOGGER_INFO_ONLY_MODE", "False").lower() == "true"
+)
+
 
 # --------------------
 # API Configuration
@@ -581,7 +585,7 @@ WEATHERFLOW_API_REST_FORECASTS_URL = f"{WEATHERFLOW_API_REST_BASE_URL}/better_fo
 WEATHERFLOW_API_REST_STATIONS_URL = f"{WEATHERFLOW_API_REST_BASE_URL}/stations"
 
 WEATHERFLOW_API_WEBSOCKET_URL = (
-    "wss://ws.weatherflow.com/swd/data?token=" + WEATHERFLOW_COLLECTOR_API_TOKEN
+    "wss://ws.weatherflow.com/swd/data?token=" + (WEATHERFLOW_COLLECTOR_API_TOKEN or "")
 )
 
 # Base HTTP URL for WeatherFlow REST API for Station Data

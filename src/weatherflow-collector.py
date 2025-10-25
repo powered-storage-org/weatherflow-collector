@@ -44,6 +44,7 @@ Modifications may be required for use with other systems or data sources.
 
 
 import asyncio
+import argparse
 import config
 import threading
 import logger
@@ -70,6 +71,13 @@ from config_validator import validate_all
 
 # from vineyard_vantage.vineyard_vantage_handler import VineyardVantageHandler
 
+
+# Parse command line arguments
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='WeatherFlow Collector - Meteorological Data Collection System')
+    parser.add_argument('--info-only', action='store_true', 
+                       help='Enable info-only logging mode with no colors (overrides environment variables)')
+    return parser.parse_args()
 
 # Initialize logger
 logger_main = logger.get_module_logger()
@@ -244,6 +252,25 @@ async def main_async():
 
 
 if __name__ == "__main__":
+    # Parse command line arguments
+    args = parse_arguments()
+    
+    # Apply info-only logging configuration if requested via command line or environment variable
+    if args.info_only or config.WEATHERFLOW_COLLECTOR_LOGGER_INFO_ONLY_MODE:
+        # Override console logging configuration for info-only mode
+        config.WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED = False
+        config.WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_ENABLED = True
+        config.WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED = False
+        
+        # Set all console log levels to INFO
+        for module in config.WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS:
+            config.WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS[module] = "INFO"
+        
+        # Reconfigure logging with new settings
+        logger.configure_logging()
+        logger_main = logger.get_module_logger()
+        logger_main.info("Info-only logging mode enabled (no colors)")
+    
     try:
         asyncio.run(main_async())
     except KeyboardInterrupt:
