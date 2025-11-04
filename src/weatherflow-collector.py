@@ -76,7 +76,7 @@ from config_validator import validate_all
 def parse_arguments():
     parser = argparse.ArgumentParser(description='WeatherFlow Collector - Meteorological Data Collection System')
     parser.add_argument('--info-only', action='store_true', 
-                       help='Enable info-only logging mode with no colors (overrides environment variables)')
+                       help='Enable info-only logging mode (overrides environment variables)')
     return parser.parse_args()
 
 # Initialize logger
@@ -258,7 +258,6 @@ if __name__ == "__main__":
     # Apply info-only logging configuration if requested via command line or environment variable
     if args.info_only or config.WEATHERFLOW_COLLECTOR_LOGGER_INFO_ONLY_MODE:
         # Override console logging configuration for info-only mode
-        config.WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED = False
         config.WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_ENABLED = True
         config.WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED = False
         
@@ -269,7 +268,7 @@ if __name__ == "__main__":
         # Reconfigure logging with new settings
         logger.configure_logging()
         logger_main = logger.get_module_logger()
-        logger_main.info("Info-only logging mode enabled (no colors)")
+        logger_main.info("Info-only logging mode enabled")
     
     try:
         asyncio.run(main_async())
