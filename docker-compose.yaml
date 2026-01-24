@@ -36,7 +36,7 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=weatherflow123
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,golioth-websocket-datasource
       # Additional settings for anonymous access
       - GF_AUTH_ANONYMOUS_HIDE_VERSION=true
     ports:
@@ -45,6 +45,7 @@ services:
       - grafana_data:/var/lib/grafana
       - grafana_config:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/dashboards/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
     networks:
       - weatherflow-network

@@ -1,14 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW",
-      "label": "InfluxDB - influxdb02 - Tylephony - weatherflow",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    }
-  ],
   "__elements": {},
   "__requires": [
     {
@@ -217,7 +207,7 @@
           "alias": "$tag_hub_sn -> WiFi",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -313,7 +303,7 @@
           "alias": "Hub -> $tag_serial_number",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -456,7 +446,7 @@
           "alias": "Voltage",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -753,7 +743,7 @@
           "alias": "Uptime",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -837,7 +827,7 @@
           "alias": "Radio Version",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -933,7 +923,7 @@
           "alias": "Reboot Count",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1023,7 +1013,7 @@
           "alias": "RSSI",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1430,7 +1420,7 @@
           "alias": "Firmware Version",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1526,7 +1516,7 @@
           "alias": "RSSI",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1634,7 +1624,7 @@
           "alias": "Uptime",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1770,7 +1760,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -1964,7 +1954,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -2162,7 +2152,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -2360,7 +2350,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -2558,7 +2548,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -2756,7 +2746,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -2954,7 +2944,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -3152,7 +3142,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -3349,7 +3339,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -3547,7 +3537,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -3771,7 +3761,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"station_name\"",
         "hide": 0,

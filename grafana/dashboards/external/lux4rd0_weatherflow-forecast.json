@@ -1,14 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW",
-      "label": "InfluxDB - influxdb02 - Tylephony - weatherflow",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    }
-  ],
   "__elements": {},
   "__requires": [
     {
@@ -94,7 +84,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -902,7 +892,7 @@
           "alias": "Sky",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -944,7 +934,7 @@
           "alias": "High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -993,7 +983,7 @@
           "alias": "Low",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1042,7 +1032,7 @@
           "alias": "Conditions",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1085,7 +1075,7 @@
           "alias": "Chance",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1128,7 +1118,7 @@
           "alias": "day_num",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1171,7 +1161,7 @@
           "alias": "day_start_local",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1220,7 +1210,7 @@
           "alias": "day_relative",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1310,7 +1300,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -2521,7 +2511,7 @@
           "alias": "Sky",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2575,7 +2565,7 @@
           "alias": "Temp",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2636,7 +2626,7 @@
           "alias": "Low",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2697,7 +2687,7 @@
           "alias": "Conditions",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2752,7 +2742,7 @@
           "alias": "Chance",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2807,7 +2797,7 @@
           "alias": "Amount",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2868,7 +2858,7 @@
           "alias": "Humidity",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2923,7 +2913,7 @@
           "alias": "Gust",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2984,7 +2974,7 @@
           "alias": "Direction",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3039,7 +3029,7 @@
           "alias": "UV",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3094,7 +3084,7 @@
           "alias": "Pressure",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3208,7 +3198,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -3396,7 +3386,7 @@
           "alias": "High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3456,7 +3446,7 @@
           "alias": "Low",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3517,7 +3507,7 @@
           "alias": "Feels Like - High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3578,7 +3568,7 @@
           "alias": "Feels Like - Low",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3642,7 +3632,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -3802,7 +3792,7 @@
           "alias": "Percent Chance",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3856,7 +3846,7 @@
           "alias": "Accumulation",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3920,7 +3910,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -4039,7 +4029,7 @@
           "alias": "High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4099,7 +4089,7 @@
           "alias": "Low",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4163,7 +4153,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -4292,7 +4282,7 @@
           "alias": "Average",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4352,7 +4342,7 @@
           "alias": "Gust",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4416,7 +4406,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -4530,7 +4520,7 @@
           "alias": "High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4584,7 +4574,7 @@
           "alias": "Low",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4642,7 +4632,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -4740,7 +4730,7 @@
           "alias": "UV",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4827,7 +4817,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"station_name\"",
         "hide": 0,
@@ -4850,7 +4840,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"station_time_zone\" WHERE \"station_name\" =~ /^$station_name$/",
         "hide": 0,
@@ -4873,7 +4863,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "select DISTINCT(\"local_day\") from (select \"local_day\",\"value\" from \"weatherflow_forecast_hourly\" WHERE $timeFilter)",
         "hide": 0,

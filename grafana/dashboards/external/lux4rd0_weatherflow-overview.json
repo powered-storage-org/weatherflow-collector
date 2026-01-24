@@ -1,22 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW",
-      "label": "InfluxDB - influxdb02 - Tylephony - weatherflow",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    },
-    {
-      "name": "DS_WEBSOCKET_- APP20 -  WEATHERFLOW-COLLECTOR",
-      "label": "websocket - app20 -  weatherflow-collector",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "golioth-websocket-datasource",
-      "pluginName": "WebSocket API"
-    }
-  ],
   "__elements": {},
   "__requires": [
     {
@@ -106,7 +88,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "gridPos": {
         "h": 8,
@@ -135,7 +117,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "refId": "A"
         }
@@ -145,7 +127,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "gridPos": {
@@ -169,7 +151,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "refId": "A"
         }
@@ -180,7 +162,7 @@
     {
       "datasource": {
         "type": "golioth-websocket-datasource",
-        "uid": "${DS_WEBSOCKET_- APP20 -  WEATHERFLOW-COLLECTOR}"
+        "uid": "data_source_websocket"
       },
       "fieldConfig": {
         "defaults": {
@@ -415,7 +397,7 @@
         {
           "datasource": {
             "type": "golioth-websocket-datasource",
-            "uid": "${DS_WEBSOCKET_- APP20 -  WEATHERFLOW-COLLECTOR}"
+            "uid": "data_source_websocket"
           },
           "fields": [
             {
@@ -516,7 +498,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -971,7 +953,7 @@
           "alias": "Current",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1034,7 +1016,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -1489,7 +1471,7 @@
           "alias": "Forecast High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -1548,7 +1530,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -2003,7 +1985,7 @@
           "alias": "Observed High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2066,7 +2048,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -2521,7 +2503,7 @@
           "alias": "Forecast High",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -2580,7 +2562,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -3035,7 +3017,7 @@
           "alias": "Observed Low",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3098,7 +3080,7 @@
     {
       "datasource": {
         "type": "golioth-websocket-datasource",
-        "uid": "${DS_WEBSOCKET_- APP20 -  WEATHERFLOW-COLLECTOR}"
+        "uid": "data_source_websocket"
       },
       "fieldConfig": {
         "defaults": {
@@ -3623,7 +3605,7 @@
         {
           "datasource": {
             "type": "golioth-websocket-datasource",
-            "uid": "${DS_WEBSOCKET_- APP20 -  WEATHERFLOW-COLLECTOR}"
+            "uid": "data_source_websocket"
           },
           "fields": [
             {
@@ -3651,7 +3633,7 @@
     {
       "datasource": {
         "type": "golioth-websocket-datasource",
-        "uid": "${DS_WEBSOCKET_- APP20 -  WEATHERFLOW-COLLECTOR}"
+        "uid": "data_source_websocket"
       },
       "description": "",
       "fieldConfig": {
@@ -3805,7 +3787,7 @@
         {
           "datasource": {
             "type": "golioth-websocket-datasource",
-            "uid": "${DS_WEBSOCKET_- APP20 -  WEATHERFLOW-COLLECTOR}"
+            "uid": "data_source_websocket"
           },
           "fields": [
             {
@@ -3833,7 +3815,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -3912,7 +3894,7 @@
           "alias": "Station Pressure",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -3976,7 +3958,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "fieldConfig": {
         "defaults": {
@@ -4529,7 +4511,7 @@
           "alias": "Humidity",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -4587,7 +4569,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+        "uid": "data_source_influxdb"
       },
       "description": "",
       "fieldConfig": {
@@ -5148,7 +5130,7 @@
           "alias": "Chance",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+            "uid": "data_source_influxdb"
           },
           "groupBy": [
             {
@@ -5249,7 +5231,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"station_name\"",
         "hide": 0,
@@ -5300,7 +5282,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"collector_type\"",
         "hide": 0,
@@ -5323,7 +5305,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"station_time_zone\" WHERE \"station_name\" =~ /^$station_name$/",
         "hide": 0,
@@ -5346,7 +5328,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"station_id\"  WHERE \"station_name\" =~ /^$station_name$/",
         "hide": 2,
@@ -5366,7 +5348,7 @@
         "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "${DS_INFLUXDB_- INFLUXDB02 - TYLEPHONY - WEATHERFLOW}"
+          "uid": "data_source_influxdb"
         },
         "definition": "SHOW TAG VALUES WITH KEY = \"device_id\"  WHERE \"station_name\" =~ /^$station_name$/",
         "hide": 2,
