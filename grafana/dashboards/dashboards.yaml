@@ -1,0 +1,25 @@
+apiVersion: 1
+
+providers:
+  - name: 'WeatherFlow Dashboards - Internal'
+    orgId: 1
+    folder: 'WeatherFlow'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/internal
+      foldersFromFilesStructure: true
+
+  - name: 'WeatherFlow Dashboards - External'
+    orgId: 1
+    folder: 'WeatherFlow External'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/external
+      foldersFromFilesStructure: true
+
