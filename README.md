@@ -1,5 +1,10 @@
+# Weather Flow Collector
 
-
+> **IMPORTANT NOTICE**
+>
+> This repository is a fork with minor customizations. The code is provided "as-is" and comes with **NO WARRANTY**. There is no guarantee this code will work for your use case. Use it at your own risk and verify functionality before relying on it in production. Prefer the original upstream repository and report issues there when appropriate:
+>
+> https://github.com/lux4rd0/weatherflow-collector
 
 ## About The Project
 
@@ -7,11 +12,11 @@
 
 ## ⚠️ Security Notice
 
-**IMPORTANT**: This Docker Compose configuration includes Grafana with **anonymous access enabled** for development purposes. 
+**IMPORTANT**: This Docker Compose configuration includes Grafana with **anonymous access enabled** for development purposes.
 
-- **Grafana**: No password required (anonymous admin access)
-- **InfluxDB**: admin/weatherflow123
-- **Production Use**: See [SECURITY_NOTICE.md](SECURITY_NOTICE.md) for production security requirements
+-   **Grafana**: No password required (anonymous admin access)
+-   **InfluxDB**: admin/weatherflow123
+-   **Production Use**: See [SECURITY_NOTICE.md](SECURITY_NOTICE.md) for production security requirements
 
 **DO NOT** use this configuration in production environments without proper authentication!
 
@@ -25,14 +30,14 @@ The project is typically deployed as a Docker container, which requires configur
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/install)
-- [Docker Compose](https://docs.docker.com/compose/install)
-- [InfluxDB V2](https://docs.influxdata.com/influxdb/v2/)
-- [Grafana 11.1.0](https://grafana.com/oss/grafana/)
+-   [Docker](https://docs.docker.com/install)
+-   [Docker Compose](https://docs.docker.com/compose/install)
+-   [InfluxDB V2](https://docs.influxdata.com/influxdb/v2/)
+-   [Grafana 11.1.0](https://grafana.com/oss/grafana/)
 
 ## Notice
 
-Version 5.1 is the most recent release of the collector, and it has been completely rewritten. However, there are still some issues that I am working on resolving. If you come across something that isn't working as expected or if you have suggestions for new features, please open an issue, and I will address it. I'm also updating the documentation as quickly as possible, as there's quite a big difference between versions. 
+Version 5.1 is the most recent release of the collector, and it has been completely rewritten. However, there are still some issues that I am working on resolving. If you come across something that isn't working as expected or if you have suggestions for new features, please open an issue, and I will address it. I'm also updating the documentation as quickly as possible, as there's quite a big difference between versions.
 
 ## Deploying the WeatherFlow Collector
 
@@ -40,7 +45,7 @@ Use the following [Docker container](https://hub.docker.com/r/lux4rd0/weatherflo
 
     lux4rd0/weatherflow-collector:5.1.55
     lux4rd0/weatherflow-collector:latest
-    
+
 The provided container has a multi-architecture supporting both Linux/amd64 and Linux/arm64.
 
 Correct environmental variables are required for the application to function. Below are the required minimum settings to get started:
@@ -50,7 +55,6 @@ Correct environmental variables are required for the application to function. Be
     WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN
     WEATHERFLOW_COLLECTOR_INFLUXDB_ORG
     WEATHERFLOW_COLLECTOR_INFLUXDB_BUCKET
-
 
 #### `docker-compose.yml`
 
@@ -122,468 +126,465 @@ Files will be created in your current working directory that look something like
     weatherflow-collector_export-station_351-device_26040.csv
     weatherflow-collector_export-station_351-device_16029.csv
 
-
 ## Environmental flags:
 
-````WEATHERFLOW_COLLECTOR_API_TOKEN````
+`WEATHERFLOW_COLLECTOR_API_TOKEN`
 
 Your WeatherFlow API token.
 
-````WEATHERFLOW_COLLECTOR_API_RATE_LIMIT````
+`WEATHERFLOW_COLLECTOR_API_RATE_LIMIT`
 
 The rate limit for API requests (default: 15).
 
-````WEATHERFLOW_COLLECTOR_API_DATA_SAVE_DIR````
+`WEATHERFLOW_COLLECTOR_API_DATA_SAVE_DIR`
 
 The base directory where you can save your API data (default: "api_data_saver").
 
-````WEATHERFLOW_COLLECTOR_CONFIG_FILE````
+`WEATHERFLOW_COLLECTOR_CONFIG_FILE`
 
 The configuration file path for WeatherFlow stations (default: "conf/weatherflow_station.conf").
 
-````WEATHERFLOW_COLLECTOR_PRIMARY_SOURCE````
+`WEATHERFLOW_COLLECTOR_PRIMARY_SOURCE`
 
 Primary source for data collection (default: "collector_websocket").
 
-````WEATHERFLOW_COLLECTOR_UDP_BUFFER_SIZE````
+`WEATHERFLOW_COLLECTOR_UDP_BUFFER_SIZE`
 
 UDP buffer size (default: 4096).
 
-````WEATHERFLOW_COLLECTOR_UDP_COLLECTOR_MAX_RETRIES````
+`WEATHERFLOW_COLLECTOR_UDP_COLLECTOR_MAX_RETRIES`
 
 Maximum retries for UDP collector (default: 5).
 
-````WEATHERFLOW_COLLECTOR_UDP_COLLECTOR_PORT````
+`WEATHERFLOW_COLLECTOR_UDP_COLLECTOR_PORT`
 
 Port for UDP collector (default: 50222).
 
-````WEATHERFLOW_COLLECTOR_UDP_COLLECTOR_RETRY_DELAY````
+`WEATHERFLOW_COLLECTOR_UDP_COLLECTOR_RETRY_DELAY`
 
 Retry delay for UDP collector (default: 5).
 
-````WEATHERFLOW_COLLECTOR_UDP_LISTEN_ADDRESS````
+`WEATHERFLOW_COLLECTOR_UDP_LISTEN_ADDRESS`
 
 Listen address for UDP (default: "0.0.0.0").
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_CLEANUP_CONNECTIONS_INTERVAL````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_CLEANUP_CONNECTIONS_INTERVAL`
 
 Cleanup interval for WebSocket server connections (default: 60).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_MAX_CONNECTIONS````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_MAX_CONNECTIONS`
 
 Maximum connections for WebSocket server (default: 100).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_PING_INTERVAL````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_PING_INTERVAL`
 
 Ping interval for WebSocket server (default: 30).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_PING_TIMEOUT````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_PING_TIMEOUT`
 
 Ping timeout for WebSocket server (default: 10).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_HOST````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_HOST`
 
 Host for WebSocket server (default: "0.0.0.0").
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_PORT````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_PORT`
 
 Port for WebSocket server (default: 6789).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_RETRY_DELAY````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_RETRY_DELAY`
 
 Retry delay for WebSocket provider (default: 1).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_MAX_DELAY````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_MAX_DELAY`
 
 Maximum delay for WebSocket provider (default: 60).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_MAX_RETRIES````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_MAX_RETRIES`
 
 Maximum retries for WebSocket provider (default: 20).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_RETRY_DELAY````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_RETRY_DELAY`
 
 Retry delay for WebSocket collector (default: 1).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_MAX_DELAY````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_MAX_DELAY`
 
 Maximum delay for WebSocket collector (default: 60).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_MAX_RETRIES````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_MAX_RETRIES`
 
 Maximum retries for WebSocket collector (default: 20).
 
-````WEATHERFLOW_COLLECTOR_INFLUXDB_URL````
+`WEATHERFLOW_COLLECTOR_INFLUXDB_URL`
 
 URL for InfluxDB.
 
-````WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN````
+`WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN`
 
 Token for InfluxDB.
 
-````WEATHERFLOW_COLLECTOR_INFLUXDB_ORG````
+`WEATHERFLOW_COLLECTOR_INFLUXDB_ORG`
 
 Organization for InfluxDB.
 
-````WEATHERFLOW_COLLECTOR_INFLUXDB_BUCKET````
+`WEATHERFLOW_COLLECTOR_INFLUXDB_BUCKET`
 
 Bucket for InfluxDB.
 
-````WEATHERFLOW_COLLECTOR_MYSQL_USER````
+`WEATHERFLOW_COLLECTOR_MYSQL_USER`
 
 MySQL user.
 
-````WEATHERFLOW_COLLECTOR_MYSQL_PASSWORD````
+`WEATHERFLOW_COLLECTOR_MYSQL_PASSWORD`
 
 MySQL password.
 
-````WEATHERFLOW_COLLECTOR_MYSQL_HOST````
+`WEATHERFLOW_COLLECTOR_MYSQL_HOST`
 
 MySQL host.
 
-````WEATHERFLOW_COLLECTOR_MYSQL_DATABASE````
+`WEATHERFLOW_COLLECTOR_MYSQL_DATABASE`
 
 MySQL database.
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_BATCH_SIZE````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_BATCH_SIZE`
 
 Batch size for InfluxDB storage (default: 2000).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_FLUSH_INTERVAL````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_FLUSH_INTERVAL`
 
 Flush interval for InfluxDB storage (default: 1000).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_JITTER_INTERVAL````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_JITTER_INTERVAL`
 
 Jitter interval for InfluxDB storage (default: 0).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_CLOSE_WAIT````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_CLOSE_WAIT`
 
 Maximum close wait for InfluxDB storage (default: 300000).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_RETRIES````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_RETRIES`
 
 Maximum retries for InfluxDB storage (default: 5).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_RETRY_DELAY````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_RETRY_DELAY`
 
 Maximum retry delay for InfluxDB storage (default: 125000).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_RETRY_TIME````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_RETRY_TIME`
 
 Maximum retry time for InfluxDB storage (default: 180000).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_RETRY_INTERVAL````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_RETRY_INTERVAL`
 
 Retry interval for InfluxDB storage (default: 5000).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_TIMEOUT````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_TIMEOUT`
 
 Timeout for InfluxDB storage (default: 30000).
 
-````WEATHERFLOW_COLLECTOR_EVENT_MANAGER_MAX_RETRIES````
+`WEATHERFLOW_COLLECTOR_EVENT_MANAGER_MAX_RETRIES`
 
 Maximum retries for event manager (default: 5).
 
-````WEATHERFLOW_COLLECTOR_EVENT_MANAGER_RETRY_DELAY````
+`WEATHERFLOW_COLLECTOR_EVENT_MANAGER_RETRY_DELAY`
 
 Retry delay for event manager (default: 1).
 
-````WEATHERFLOW_COLLECTOR_LOG_DIRECTORY````
+`WEATHERFLOW_COLLECTOR_LOG_DIRECTORY`
 
 Directory for logs (default: "logs").
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_EXPORT_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_EXPORT_ENABLED`
 
 Enable collector export (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_ENABLED`
 
 Enable file storage (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_ENABLED`
 
 Enable InfluxDB storage (default: True).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_EXPORT_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_EXPORT_ENABLED`
 
 Enable REST export (default: False).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_FORECASTS_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_FORECASTS_ENABLED`
 
 Enable REST forecasts (default: True).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_ENABLED`
 
 Enable REST import (default: False).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_DEVICE_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_DEVICE_ENABLED`
 
 Enable REST observations for devices (default: True).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_STATION_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_STATION_ENABLED`
 
 Enable REST observations for stations (default: False).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_STATS_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_STATS_ENABLED`
 
 Enable REST stats (default: True).
 
-````WEATHERFLOW_COLLECTOR_SYSTEM_METRICS_ENABLED````
+`WEATHERFLOW_COLLECTOR_SYSTEM_METRICS_ENABLED`
 
 Enable system metrics (default: True).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_UDP_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_UDP_ENABLED`
 
 Enable UDP collector (default: True).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_ENABLED````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_ENABLED`
 
 Enable WebSocket collector (default: True).
 
-````WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_ENABLED````
+`WEATHERFLOW_COLLECTOR_PROVIDER_WEBSOCKET_SERVER_ENABLED`
 
 Enable WebSocket server provider (default: True).
 
-````WEATHERFLOW_COLLECTOR_HANDLER_ENABLED````
+`WEATHERFLOW_COLLECTOR_HANDLER_ENABLED`
 
 Enable handler (default: True).
 
-````WEATHERFLOW_COLLECTOR_HANDLER_REST_STATS_SUPPRESS_WARNINGS_ENABLED````
+`WEATHERFLOW_COLLECTOR_HANDLER_REST_STATS_SUPPRESS_WARNINGS_ENABLED`
 
 Suppress REST stats warnings (default: True).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_FORECASTS_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_FORECASTS_ENABLED`
 
 Enable file storage for REST forecasts (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_IMPORT_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_IMPORT_ENABLED`
 
 Enable file storage for REST import (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_EXPORT_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_EXPORT_ENABLED`
 
 Enable file storage for REST export (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_OBSERVATIONS_DEVICE_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_OBSERVATIONS_DEVICE_ENABLED`
 
 Enable file storage for REST observations (device) (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_OBSERVATIONS_STATION_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_OBSERVATIONS_STATION_ENABLED`
 
 Enable file storage for REST observations (station) (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_STATIONCONFIG_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_STATIONCONFIG_ENABLED`
 
 Enable file storage for station configuration (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_UDP_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_UDP_ENABLED`
 
 Enable file storage for UDP collector (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_WEBSOCKET_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_WEBSOCKET_ENABLED`
 
 Enable file storage for WebSocket collector (default: False).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_STATS_ENABLED````
+`WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_STATS_ENABLED`
 
 Enable file storage for REST stats (default: False).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_INFLUXDB_DATA_STRUCTURE_TRACKING````
+`WEATHERFLOW_COLLECTOR_ENABLE_INFLUXDB_DATA_STRUCTURE_TRACKING`
 
 Enable InfluxDB data structure tracking (default: False).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_INFLUXDB_DATA_STRUCTURE_TRACKING_EXPORT_INTERVAL````
+`WEATHERFLOW_COLLECTOR_ENABLE_INFLUXDB_DATA_STRUCTURE_TRACKING_EXPORT_INTERVAL`
 
 The export interval for InfluxDB data structure tracking (default: 60).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_INFLUXDB_DATA_STRUCTURE_TRACKING_SAVE_DIR````
+`WEATHERFLOW_COLLECTOR_ENABLE_INFLUXDB_DATA_STRUCTURE_TRACKING_SAVE_DIR`
 
 The save directory for InfluxDB data structure tracking (default: "logs").
 
-````WEATHERFLOW_COLLECTOR_EXPORT_COLLECTOR_STALE_SEGMENT_DAYS````
+`WEATHERFLOW_COLLECTOR_EXPORT_COLLECTOR_STALE_SEGMENT_DAYS`
 
 Stale segment days for export collector (default: 30).
 
-````WEATHERFLOW_COLLECTOR_REST_EXPORT_FETCH_OBSERVATIONS_WORKERS````
+`WEATHERFLOW_COLLECTOR_REST_EXPORT_FETCH_OBSERVATIONS_WORKERS`
 
 Workers for REST export fetch observations (default: 4).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_INTERVAL````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_INTERVAL`
 
 Interval for REST observations (default: 60).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_FETCH_WORKERS````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_FETCH_WORKERS`
 
 Fetch workers for REST import (default: 16).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_FORECASTS_FETCH_INTERVAL````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_FORECASTS_FETCH_INTERVAL`
 
 Fetch interval for REST forecasts (default: 60).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_FETCH_OBSERVATIONS_DELAY_MS````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_FETCH_OBSERVATIONS_DELAY_MS`
 
 Fetch observations delay for REST import (default: 200).
 
-````WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_WORKERS````
+`WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_WORKERS`
 
 Workers for InfluxDB storage (default: 8).
 
-````WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_BATCH_SIZE````
+`WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_BATCH_SIZE`
 
 Batch size for REST import (default: 2000).
 
-````WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_RETRIES````
+`WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_RETRIES`
 
 HTTP fetch retries (default: 3).
 
-````WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_RETRY_WAIT````
+`WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_RETRY_WAIT`
 
 Retry wait for HTTP fetch (default: 2).
 
-````WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_TIMEOUT````
+`WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_TIMEOUT`
 
 Timeout for HTTP fetch (default: 30).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_WEBSOCKETCOLLECTOR_TIMEOUT_SOCKET````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_WEBSOCKETCOLLECTOR_TIMEOUT_SOCKET`
 
 The parameter defines the maximum duration the WeatherFlow Collector WebSocket Client will wait without receiving any data before considering the connection inactive. If no data is received within this specified timeout period, the WebSocket connection is closed and re-established to ensure continuous data flow and system reliability (default: 60).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_FORECAST````
+`WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_FORECAST`
 
 Enable health check for forecast (default: True).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_REST````
+`WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_REST`
 
 Enable health check for REST (default: True).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_SOCKET````
+`WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_SOCKET`
 
 Enable health check for socket (default: True).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_UDP````
+`WEATHERFLOW_COLLECTOR_ENABLE_HEALTHCHECK_UDP`
 
 Enable health check for UDP (default: True).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_FORECAST````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_FORECAST`
 
 Health check interval for forecast (default: 15).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_REST````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_REST`
 
 Health check interval for REST (default: 60).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_SOCKET````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_SOCKET`
 
 Health check interval for socket (default: 5).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_UDP````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_INTERVAL_UDP`
 
 Health check interval for UDP (default: 10).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_RECONNECT_SOCKET````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_RECONNECT_SOCKET`
 
 Reconnect interval for socket (default: 60).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_RELISTEN_SOCKET````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_RELISTEN_SOCKET`
 
 Relisten interval for socket (default: 10).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_RETRY_DELAY_SOCKET````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_RETRY_DELAY_SOCKET`
 
 Retry delay for socket (default: 120).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_FORECAST````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_FORECAST`
 
 Startup delay for forecast health check (default: 60).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_REST````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_REST`
 
 Startup delay for REST health check (default: 120).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_SOCKET````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_SOCKET`
 
 Startup delay for socket health check (default: 60).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_UDP````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_STARTUP_DELAY_UDP`
 
 Startup delay for UDP health check (default: 60).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_FORECAST````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_FORECAST`
 
 Threshold for forecast health check (default: 3000).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_REST````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_REST`
 
 Threshold for REST health check (default: 60).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_SOCKET````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_SOCKET`
 
 Threshold for socket health check (default: 900).
 
-````WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_UDP````
+`WEATHERFLOW_COLLECTOR_HEALTHCHECK_THRESHOLD_UDP`
 
 Threshold for UDP health check (default: 10).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_O11Y_FORECAST````
-
-
+`WEATHERFLOW_COLLECTOR_ENABLE_O11Y_FORECAST`
 
 Threshold for O11y UDP (default: 10).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_IMPORT_EXPORT_CACHE````
+`WEATHERFLOW_COLLECTOR_ENABLE_IMPORT_EXPORT_CACHE`
 
 Enable import/export cache (default: True).
 
-````WEATHERFLOW_COLLECTOR_ENABLE_IMPORT_EXPORT_CACHE_EXCLUDE_RECENT_HOURS````
+`WEATHERFLOW_COLLECTOR_ENABLE_IMPORT_EXPORT_CACHE_EXCLUDE_RECENT_HOURS`
 
 Exclude recent hours from import/export cache (default: True).
 
-````WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_BUCKET````
+`WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_BUCKET`
 
 Export bucket for processor (default: "month").
 
-````WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_FOLDER````
+`WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_FOLDER`
 
 Export folder for processor (default: "export").
 
-````WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_WORKERS````
+`WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_WORKERS`
 
 Workers for processor export (default: 8).
 
-````WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_TYPE````
+`WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_TYPE`
 
 Export type for processor (default: "csv").
 
-````WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_CACHE_EXCLUDE_RECENT_HOURS````
+`WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_CACHE_EXCLUDE_RECENT_HOURS`
 
 Exclude recent hours from processor export cache (default: 48).
 
-````WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_CACHE_FOLDER````
+`WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_CACHE_FOLDER`
 
 Cache folder for processor export (default: "cache").
 
-````WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_CACHE_TTL````
+`WEATHERFLOW_COLLECTOR_PROCESSOR_EXPORT_CACHE_TTL`
 
 Cache TTL for processor export (default: 7200).
 
-````WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED````
+`WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_USE_COLOR_ENABLED`
 
 Enable color for console logger (default: True).
 
-````WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_ENABLED````
+`WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_ENABLED`
 
 Enable console logger (default: True).
 
-````WEATHERFLOW_COLLECTOR_LOGGER_FILE_USE_COLOR_ENABLED````
+`WEATHERFLOW_COLLECTOR_LOGGER_FILE_USE_COLOR_ENABLED`
 
 Enable color for file logger (default: False).
 
-````WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED````
+`WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED`
 
 Enable file logger (default: False).
 
-#### *Note - If a change is made to the location details of your WeatherFlow device (such as station name, public name, longitude, latitude, etc.) - please restart the docker container to pick up the changes.
+#### \*Note - If a change is made to the location details of your WeatherFlow device (such as station name, public name, longitude, latitude, etc.) - please restart the docker container to pick up the changes.
 
 ## Obtaining Your Tempest Authentication Token
 
@@ -621,13 +622,13 @@ Collecting data is only half the fun. Now it's time to provision some Grafana Da
 
 This dashboard provides a comprehensive overview of your station location, combining all "at-a-glance" metrics from your WeatherFlow device. The current conditions dashboard is divided up into:
 
-- **Temperature & Wind**: observed, feels like, forecast high and low, the chance of precipitation, humidity, sea level pressure, UV, wind speed, and direction.
+-   **Temperature & Wind**: observed, feels like, forecast high and low, the chance of precipitation, humidity, sea level pressure, UV, wind speed, and direction.
 
-- **Sunrise & Sunset and Sky Conditions**
+-   **Sunrise & Sunset and Sky Conditions**
 
-- **Temperature & Brightness**: Heat index, wind chill, dry bulb, wet bulb, dew point, station pressure, brightness, solar radiation, and air density.
+-   **Temperature & Brightness**: Heat index, wind chill, dry bulb, wet bulb, dew point, station pressure, brightness, solar radiation, and air density.
 
-- **Rain & Lightning**: Rain accumulation (today and yesterday), rain duration (today and yesterday), lightning last detected, last distance, and the number of lightning detections during the previous 3 hours.
+-   **Rain & Lightning**: Rain accumulation (today and yesterday), rain duration (today and yesterday), lightning last detected, last distance, and the number of lightning detections during the previous 3 hours.
 
 ### Device Details - [14378](https://grafana.com/grafana/dashboards/14378)
 
@@ -681,9 +682,9 @@ This provides two different system metrics to understand the health of your weat
 
 The second section shows how long it takes to receive and persist forecasts and observations.
 
- - **Forecast Build Duration** - Daily - between 1 and 2 seconds
- - **Forecast Build Duration** - Hourly - between 30 and 45 seconds (note - if this takes longer than 60 seconds, the Docker Health Check will currently recycle the container. A future update will change this to take a longer build duration into account. For now - set the "WEATHERFLOW_COLLECTOR_DOCKER_HEALTHCHECK_ENABLED" environmental variable to "false."
- - **Rest Observations** - between 1 and 2 seconds
+-   **Forecast Build Duration** - Daily - between 1 and 2 seconds
+-   **Forecast Build Duration** - Hourly - between 30 and 45 seconds (note - if this takes longer than 60 seconds, the Docker Health Check will currently recycle the container. A future update will change this to take a longer build duration into account. For now - set the "WEATHERFLOW_COLLECTOR_DOCKER_HEALTHCHECK_ENABLED" environmental variable to "false."
+-   **Rest Observations** - between 1 and 2 seconds
 
 ### Today So Far - [14387](https://grafana.com/grafana/dashboards/14387)
 
@@ -699,16 +700,16 @@ https://docs.influxdata.com/influxdb/v2/tools/grafana/?t=InfluxQL#configure-your
 
 The biggest change here is:
 
- - Configure InfluxDB authentication:
-   
-   **Token authentication**
-   Under **Custom HTTP Headers**, select **Add Header**. Provide your InfluxDB API token:
-   
-   **Header**: Enter `Authorization`
-   
-   **Value**: Use the `Token` schema and provide your InfluxDB API token. For example:
-   
-       Token y0uR5uP3rSecr3tT0k3n
+-   Configure InfluxDB authentication:
+
+    **Token authentication**
+    Under **Custom HTTP Headers**, select **Add Header**. Provide your InfluxDB API token:
+
+    **Header**: Enter `Authorization`
+
+    **Value**: Use the `Token` schema and provide your InfluxDB API token. For example:
+
+        Token y0uR5uP3rSecr3tT0k3n
 
 ## Multiple Devices
 
@@ -716,7 +717,7 @@ The data collector and dashboards support multiple WeatherFlow Tempest devices.
 
 ### Time Zone Variable
 
-A TZ variable is required when running the Docker containers. (It's populated automatically from the `generate_docker-compose.sh` scripts) 
+A TZ variable is required when running the Docker containers. (It's populated automatically from the `generate_docker-compose.sh` scripts)
 
 TZ is specific to each hub/device location and is required as part of the InluxDB query to identify day breaks and other 12/24 hour interval groups. For dashboards with multiple devices in different time zones, you may need to correctly switch the time zones from the top drop-down to group midnight/noon periods.
 
@@ -732,6 +733,6 @@ Project Link: [https://github.com/lux4rd0/weatherflow-collector](https://github.
 
 ## Acknowledgements
 
-- Grafana Labs - [https://grafana.com/](https://grafana.com/)
-- Grafana - [https://grafana.com/oss/grafana/](https://grafana.com/oss/grafana/)
-- Grafana Dashboard Community - [https://grafana.com/grafana/dashboards/](https://grafana.com/grafana/dashboards/)
+-   Grafana Labs - [https://grafana.com/](https://grafana.com/)
+-   Grafana - [https://grafana.com/oss/grafana/](https://grafana.com/oss/grafana/)
+-   Grafana Dashboard Community - [https://grafana.com/grafana/dashboards/](https://grafana.com/grafana/dashboards/)
