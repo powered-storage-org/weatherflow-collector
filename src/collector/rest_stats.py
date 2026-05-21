@@ -1,14 +1,12 @@
 # collector_rest_stats.py
 
 import asyncio
-import logging
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta
 
 import config
-import utils.utils as utils
-
 import logger
+import utils.utils as utils
 
 logger_RestStatsCollector = logger.get_module_logger(__name__ + ".RestStatsCollector")
 
@@ -37,9 +35,7 @@ class RestStatsCollector:
             )
 
             if json_data:
-                logger_RestStatsCollector.debug(
-                    f"Received JSON data for station ID {station_id}"
-                )
+                logger_RestStatsCollector.debug(f"Received JSON data for station ID {station_id}")
 
                 # Wrap the data with metadata
                 data_with_metadata = {
@@ -125,9 +121,7 @@ class RestStatsCollector:
         await self.fetch_stats(station_id)
 
     async def run_forever(self):
-        logger_RestStatsCollector.info(
-            "Starting RestStatsCollector in run_forever mode."
-        )
+        logger_RestStatsCollector.info("Starting RestStatsCollector in run_forever mode.")
         while True:
             # Run once at startup
             await self.retrieve_and_save_data()

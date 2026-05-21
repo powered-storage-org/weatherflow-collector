@@ -3,8 +3,8 @@
 """
 FileStorage Module for WeatherFlow Collector
 
-This module is responsible for writing received meteorological data to files. It is part of the WeatherFlow Collector 
-system, which gathers data from various sources like UDP, WebSocket, and REST clients. The FileStorage specifically 
+This module is responsible for writing received meteorological data to files. It is part of the WeatherFlow Collector
+system, which gathers data from various sources like UDP, WebSocket, and REST clients. The FileStorage specifically
 handles the storage of this data in a structured and accessible file format.
 
 Key Features:
@@ -13,7 +13,7 @@ Key Features:
 - Capable of handling data from different sources, including UDP, WebSocket, and REST clients.
 
 Usage:
-The FileStorage is initialized with an event manager and an output directory. It subscribes to data events, 
+The FileStorage is initialized with an event manager and an output directory. It subscribes to data events,
 processing each incoming packet and writing it to a JSON file in the appropriate directory.
 
 Dependencies:
@@ -35,21 +35,18 @@ Author: [Your Name or Team's Name]
 Last Update: [Last Update Date]
 
 Note:
-The design of FileStorage is tailored to the WeatherFlow Collector system's structure. It can be adapted 
+The design of FileStorage is tailored to the WeatherFlow Collector system's structure. It can be adapted
 or extended for broader applications or different data formats as needed.
 """
 
-
 import json
 import os
-from datetime import datetime
-import logger
 import time
-import asyncio
+from datetime import datetime
 
-
-import utils.utils as utils
 import config
+import logger
+import utils.utils as utils
 
 logger_FileStorage = logger.get_module_logger(__name__ + ".FileStorage")
 
@@ -75,9 +72,7 @@ class FileStorage:
             # logger_FileStorage.debug(f"Received full_data: {full_data}")
 
             metadata = full_data.get("metadata", {})
-            collector_type = metadata.get(
-                "collector_type", "unknown"
-            )  # Default to "unknown"
+            collector_type = metadata.get("collector_type", "unknown")  # Default to "unknown"
             filename_suffix = self.construct_filename_suffix(full_data, collector_type)
             await self.write_to_file(full_data, collector_type, filename_suffix)
 
@@ -156,9 +151,7 @@ class FileStorage:
             collector_type == "collector_rest_forecasts"
             and not config.WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_FORECASTS_ENABLED
         ):
-            logger_FileStorage.debug(
-                "Writing for 'collector_rest_forecasts' is disabled."
-            )
+            logger_FileStorage.debug("Writing for 'collector_rest_forecasts' is disabled.")
             return
         elif (
             collector_type == "collector_rest_import"
@@ -192,9 +185,7 @@ class FileStorage:
             collector_type == "collector_rest_stationconfig"
             and not config.WEATHERFLOW_COLLECTOR_STORAGE_FILE_COLLECTOR_REST_STATIONCONFIG_ENABLED
         ):
-            logger_FileStorage.debug(
-                "Writing for 'collector_rest_stationconfig' is disabled."
-            )
+            logger_FileStorage.debug("Writing for 'collector_rest_stationconfig' is disabled.")
             return
         elif (
             collector_type == "collector_udp"
@@ -221,9 +212,7 @@ class FileStorage:
         # Extract only the "data" part from the full_data
         data_to_write = full_data.get("data", {})
 
-        self.file_path = os.path.join(
-            client_output_directory, filename_suffix + ".json"
-        )
+        self.file_path = os.path.join(client_output_directory, filename_suffix + ".json")
         try:
             with open(self.file_path, "a") as file:
                 json.dump(data_to_write, file)

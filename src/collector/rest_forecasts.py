@@ -4,7 +4,7 @@
 WeatherFlow Collector REST Forecasts Client
 
 This module is part of the WeatherFlow Collector system and is responsible for retrieving weather forecasts
-from WeatherFlow's REST API. It periodically fetches forecast data for enabled weather stations and publishes 
+from WeatherFlow's REST API. It periodically fetches forecast data for enabled weather stations and publishes
 the data with relevant metadata for further processing.
 
 Key Features:
@@ -42,24 +42,17 @@ The RestForcecastsCollector is specifically designed for integration with the We
 It is tailored to interact with WeatherFlow's REST API and is not intended for standalone use.
 """
 
-import aiohttp
 import asyncio
-import logging
-from datetime import datetime, timedelta
 import time
-
+from datetime import datetime, timedelta
 
 import config
+
+# from utils.calculate_weather_metrics import CalculateWeatherMetrics
+import logger
 import utils.utils as utils
 
-
-#from utils.calculate_weather_metrics import CalculateWeatherMetrics
-
-import logger
-
-logger_CollectorRestForcecasts = logger.get_module_logger(
-    __name__ + ".RestForcecastsCollector"
-)
+logger_CollectorRestForcecasts = logger.get_module_logger(__name__ + ".RestForcecastsCollector")
 
 
 class RestForcecastsCollector:
@@ -152,11 +145,11 @@ class RestForcecastsCollector:
 
     async def retrieve_and_save_data(self):
         station_metadata = utils.StationMetadataSingleton().get_metadata()
-        
+
         # Calculate delay based on API rate limit to avoid 429 errors
         # API limit is typically 15 requests per minute
         delay_between_requests = 60.0 / config.WEATHERFLOW_COLLECTOR_API_RATE_LIMIT
-        
+
         for station_id, station_info in station_metadata.items():
             if station_info.get("enabled", False):
                 await self.fetch_forecasts(station_id)
@@ -167,9 +160,7 @@ class RestForcecastsCollector:
                 await asyncio.sleep(delay_between_requests)
 
     async def run_forever(self):
-        logger_CollectorRestForcecasts.info(
-            "Starting RestForcecastsCollector in run_forever mode."
-        )
+        logger_CollectorRestForcecasts.info("Starting RestForcecastsCollector in run_forever mode.")
         while True:
             start_time = asyncio.get_event_loop().time()
             await self.retrieve_and_save_data()
@@ -182,8 +173,7 @@ class RestForcecastsCollector:
 
             # Calculating and logging the sleep time
             sleep_time = max(
-                config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_FORECASTS_FETCH_INTERVAL
-                - elapsed_time,
+                config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_FORECASTS_FETCH_INTERVAL - elapsed_time,
                 0,
             )
             next_start_time = datetime.now() + timedelta(seconds=sleep_time)

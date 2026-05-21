@@ -1,13 +1,10 @@
-import aiohttp
 import asyncio
-import logging
-from datetime import datetime, timedelta
-import config
-import utils.utils as utils
 import json
-import time
+from datetime import datetime, timedelta
 
+import config
 import logger
+import utils.utils as utils
 
 logger_RestImportClient = logger.get_module_logger(__name__ + ".RestImportCollector")
 
@@ -43,9 +40,7 @@ class RestImportCollector:
                 url_daily_observations, self.collector_type, self.event_manager
             )
             if response_data:
-                json_data = json.dumps(
-                    response_data
-                )  # Convert dictionary to JSON string
+                json_data = json.dumps(response_data)  # Convert dictionary to JSON string
                 data_with_metadata = {
                     "metadata": {
                         "collector_type": self.collector_type,
@@ -72,7 +67,6 @@ class RestImportCollector:
             logger_RestImportClient.error(f"Error fetching daily observations: {e}")
             return None
         finally:
-
             pass
             # Add a delay between requests
             # delay_duration_ms = config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_FETCH_OBSERVATIONS_DELAY_MS
@@ -96,17 +90,17 @@ class RestImportCollector:
             if response_data:
                 json_data_stats = json.dumps(response_data)
                 parsed_data_stats = json.loads(json_data_stats)
-                
+
                 first_ob_day = parsed_data_stats.get("first_ob_day_local")
                 last_ob_day = parsed_data_stats.get("last_ob_day_local")
-                
+
                 if not first_ob_day or not last_ob_day:
                     logger_RestImportClient.error(
                         f"Missing date range data for station ID {station_id}. "
                         f"first_ob_day_local: {first_ob_day}, last_ob_day_local: {last_ob_day}"
                     )
                     return None, None
-                
+
                 start_date = datetime.strptime(first_ob_day, "%Y-%m-%d")
                 end_date = datetime.strptime(last_ob_day, "%Y-%m-%d")
                 return start_date, end_date
@@ -121,9 +115,7 @@ class RestImportCollector:
 
     async def process_stations(self, station_metadata):
         try:
-            num_workers = (
-                config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_FETCH_WORKERS
-            )
+            num_workers = config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_IMPORT_FETCH_WORKERS
             semaphore = asyncio.Semaphore(num_workers)
             tasks = []
 
@@ -153,17 +145,13 @@ class RestImportCollector:
         except Exception as e:
             logger_RestImportClient.error(f"Error processing stations: {e}")
 
-    async def fetch_daily_observations_with_semaphore(
-        self, semaphore, station_id, specific_date
-    ):
+    async def fetch_daily_observations_with_semaphore(self, semaphore, station_id, specific_date):
         async with semaphore:
             await self.fetch_daily_observations(station_id, specific_date)
 
     async def run_once(self):
         try:
-            logger_RestImportClient.info(
-                "Starting RestImportCollector for a single run."
-            )
+            logger_RestImportClient.info("Starting RestImportCollector for a single run.")
             start_time = datetime.now()
             await self.process_stations(utils.StationMetadataSingleton().get_metadata())
             elapsed_time = datetime.now() - start_time

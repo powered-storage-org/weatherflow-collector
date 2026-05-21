@@ -43,13 +43,12 @@ It is tailored to receive and process data specifically from WeatherFlow weather
 
 import asyncio
 import json
-import time
 import socket
+import time
 
 import config
-import utils.utils as utils
 import logger
-
+import utils.utils as utils
 
 UDPProtocol = logger.get_module_logger(__name__ + ".UDPProtocol")
 
@@ -100,9 +99,7 @@ class UDPCollector:
                     reuse_port=True,  # Enable port reuse
                 )
                 self.transport, _ = await listen
-                logger_UDPCollector.info(
-                    f"Listening for UDP traffic on port {self.port}"
-                )
+                logger_UDPCollector.info(f"Listening for UDP traffic on port {self.port}")
                 break  # Exit the loop on successful socket creation
             except OSError as e:
                 if e.errno == socket.errno.EADDRINUSE:

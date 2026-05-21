@@ -36,25 +36,15 @@ Author: Dave Schmid
 Created: 2023-12-17
 """
 
-
-import math
-
-
-import aiohttp
 import asyncio
-
-
-from logger import get_module_logger
-
+import logging  # Add this import
 import time
 from functools import wraps
 
+import aiohttp
 
-import logging  # Add this import
-from datetime import datetime
-
-import logger
 import config
+import logger
 
 logger_Utils = logger.get_module_logger(__name__ + ".Utils")
 
@@ -67,7 +57,7 @@ class SingletonMeta(type):
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
-            cls._instances[cls] = super(SingletonMeta, cls).__call__(*args, **kwargs)
+            cls._instances[cls] = super().__call__(*args, **kwargs)
         return cls._instances[cls]
 
 
@@ -96,9 +86,7 @@ def get_station_config_by_serial_number(serial_number):
     metadata_singleton = StationMetadataSingleton()
     station_metadata = metadata_singleton.get_metadata()
 
-    logger_Utils.debug(
-        f"get_station_config_by_serial_number: data coming in {serial_number}"
-    )
+    logger_Utils.debug(f"get_station_config_by_serial_number: data coming in {serial_number}")
 
     for station_id, config in station_metadata.items():
         for device in config.get("devices", []):
@@ -277,9 +265,7 @@ def calculate_timestamp_delta(method_name):
 
             # Execute the original function (API call)
             result = (
-                await func(self, *args, **kwargs)
-                if is_coroutine
-                else func(self, *args, **kwargs)
+                await func(self, *args, **kwargs) if is_coroutine else func(self, *args, **kwargs)
             )
 
             # Post execution logic
@@ -320,9 +306,7 @@ def calculate_timestamp_delta(method_name):
 
             event_manager = getattr(self, "event_manager", None)
             if event_manager:
-                await event_manager.publish(
-                    "influxdb_storage_event", collector_data_with_meta
-                )
+                await event_manager.publish("influxdb_storage_event", collector_data_with_meta)
                 logger_Utils.debug("Event published")
 
             logger_Utils.debug(
@@ -466,7 +450,6 @@ def normalize_fields(fields):
         "lightning_strike_avg_distance": float,
         "lightning_strike_count": int,
         "local_daily_rain_accumulation": float,
-        "local_daily_rain_accumulation": float,
         "local_daily_rain_accumulation_final": float,
         "local_precipitation_accumulation_final": float,
         "local_precipitation_accumulation_today": float,
@@ -513,9 +496,7 @@ def normalize_fields(fields):
             elif expected_type is int:
                 # Convert to integer if not None, but only if the value is numeric
                 normalized_fields[field] = (
-                    int(str(value))
-                    if value is not None and str(value).isdigit()
-                    else None
+                    int(str(value)) if value is not None and str(value).isdigit() else None
                 )
 
             else:
@@ -586,9 +567,7 @@ async def fetch_data_from_url(url, collector_type, event_manager):
                         return json_data
                     else:
                         metrics_data[collector_type]["errors"] += 1
-                        logger_Utils.error(
-                            f"Error {response.status} fetching data from URL: {url}"
-                        )
+                        logger_Utils.error(f"Error {response.status} fetching data from URL: {url}")
         except aiohttp.ClientConnectionError as e:
             metrics_data[collector_type]["errors"] += 1
             logger_Utils.warning(f"Connection error when fetching data from {url}: {e}")
@@ -596,7 +575,7 @@ async def fetch_data_from_url(url, collector_type, event_manager):
             metrics_data[collector_type]["errors"] += 1
             logger_Utils.error(f"Client error when fetching data from {url}: {e}")
             break  # Stop retrying for collector errors
-        except asyncio.TimeoutError as e:
+        except TimeoutError as e:
             metrics_data[collector_type]["errors"] += 1
             logger_Utils.warning(f"Timeout error when fetching data from {url}: {e}")
         except Exception as e:
@@ -606,9 +585,7 @@ async def fetch_data_from_url(url, collector_type, event_manager):
 
         attempt += 1
         if attempt < config.WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_RETRIES:
-            await asyncio.sleep(
-                config.WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_RETRY_WAIT
-            )
+            await asyncio.sleep(config.WEATHERFLOW_COLLECTOR_UTILS_HTTP_FETCH_RETRY_WAIT)
 
     # Publish the metrics after all attempts, even if all attempts fail
     logger_Utils.debug(f"Metrics for {collector_type}: {metrics_data[collector_type]}")
@@ -629,9 +606,7 @@ async def fetch_data_from_url(url, collector_type, event_manager):
     return None
 
 
-def publish_metrics(
-    event_manager, loop, metric_name, module_name, rate, errors, duration
-):
+def publish_metrics(event_manager, loop, metric_name, module_name, rate, errors, duration):
     """
     Publish metrics using the event manager.
 

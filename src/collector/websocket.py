@@ -4,8 +4,8 @@
 WeatherFlow Collector WebSocket Client
 
 This module is part of the WeatherFlow Collector system and is responsible for managing WebSocket
-connections to receive real-time weather data. It handles the establishment of the WebSocket 
-connection, authentication, message reception, and forwarding the data to the appropriate 
+connections to receive real-time weather data. It handles the establishment of the WebSocket
+connection, authentication, message reception, and forwarding the data to the appropriate
 event manager for further processing.
 
 Key Features:
@@ -16,7 +16,7 @@ Key Features:
 
 Usage:
 This WebSocket collector is designed to be used within the WeatherFlow Collector system. It requires
-a valid API token and a configured WebSocket URL to establish a connection with the WeatherFlow 
+a valid API token and a configured WebSocket URL to establish a connection with the WeatherFlow
 WebSocket server.
 
 Dependencies:
@@ -44,23 +44,20 @@ Author: [Your Name or Team's Name]
 Last Update: [Last Update Date]
 
 Note:
-The WebSocket collector is an integral part of the WeatherFlow Collector system and is not intended 
+The WebSocket collector is an integral part of the WeatherFlow Collector system and is not intended
 for standalone use. It should be used in conjunction with other components of the system.
 """
 
-
-import json
 import asyncio
-import websockets
+import datetime
+import json
+import random
+import time
 
+import websockets
 
 import config
 import logger
-import random
-import time
-import datetime
-
-
 import utils.utils as utils  # Assuming utils contains necessary methods
 
 logger_WebsocketCollector = logger.get_module_logger(__name__ + ".WebsocketCollector")
@@ -101,9 +98,7 @@ class WebsocketCollector:
                 break
             except Exception as e:
                 retry_count += 1
-                logger_WebsocketCollector.error(
-                    f"Failed to establish WebSocket connection: {e}"
-                )
+                logger_WebsocketCollector.error(f"Failed to establish WebSocket connection: {e}")
 
                 if retry_count < max_retries:
                     next_retry_time = datetime.datetime.now() + datetime.timedelta(
@@ -124,9 +119,7 @@ class WebsocketCollector:
     async def authenticate(self):
         auth_message = json.dumps({"type": "listen_start", "token": self.api_token})
         await self.websocket.send(auth_message)
-        logger_WebsocketCollector.info(
-            "Sent authentication message to WebSocket server."
-        )
+        logger_WebsocketCollector.info("Sent authentication message to WebSocket server.")
 
     async def receive_and_forward_messages(self):
         """
@@ -153,9 +146,7 @@ class WebsocketCollector:
             try:
                 # Wait for a message to be received
                 message = await self.websocket.recv()
-                self.last_message_time = (
-                    time.time()
-                )  # Update the last received message time
+                self.last_message_time = time.time()  # Update the last received message time
 
                 # Start the timer after receiving the message
                 message_processing_start = time.time()
@@ -173,9 +164,7 @@ class WebsocketCollector:
                 message_type = json_data.get("type")
                 if message_type == "connection_opened":
                     await self.handle_connection_opened()
-                    logger_WebsocketCollector.info(
-                        f"Handled connection opened: {message}"
-                    )
+                    logger_WebsocketCollector.info(f"Handled connection opened: {message}")
 
                 elif message_type == "ack":
                     logger_WebsocketCollector.debug(
@@ -183,9 +172,7 @@ class WebsocketCollector:
                     )
 
                 elif "status" in json_data:
-                    logger_WebsocketCollector.debug(
-                        f"Received initial 'status' message: {message}"
-                    )
+                    logger_WebsocketCollector.debug(f"Received initial 'status' message: {message}")
 
                 else:
                     # Forward other messages to the event manager
@@ -237,10 +224,7 @@ class WebsocketCollector:
         for station_id, station_info in station_metadata.items():
             if station_info.get("enabled", False):
                 for device in station_info.get("devices", []):
-                    if (
-                        device.get("enabled", False)
-                        and device.get("device_type") != "HB"
-                    ):
+                    if device.get("enabled", False) and device.get("device_type") != "HB":
                         await self.subscribe_to_device(device.get("device_id"))
 
     async def subscribe_to_device(self, device_id):
@@ -271,13 +255,9 @@ class WebsocketCollector:
                 # Send any final messages if needed (e.g., 'disconnect' message)
                 # await self.websocket.send(json.dumps({"type": "disconnect"}))
                 await self.websocket.close()
-                logger_WebsocketCollector.info(
-                    "WebSocket connection closed gracefully."
-                )
+                logger_WebsocketCollector.info("WebSocket connection closed gracefully.")
             except Exception as e:
-                logger_WebsocketCollector.error(
-                    f"Error closing WebSocket connection: {e}"
-                )
+                logger_WebsocketCollector.error(f"Error closing WebSocket connection: {e}")
                 # Additional logging for debugging
                 logger_WebsocketCollector.debug(
                     f"Exception details: {e.__class__.__name__}: {str(e)}"

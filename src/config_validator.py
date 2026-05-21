@@ -37,9 +37,7 @@ def validate_influxdb_config():
         missing_config.append("WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN")
     else:
         obscured_token = obfuscate_token(config.WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN)
-        logger_ConfigValidator.info(
-            f"InfluxDB Token is set (partially shown): {obscured_token}"
-        )
+        logger_ConfigValidator.info(f"InfluxDB Token is set (partially shown): {obscured_token}")
 
     if not config.WEATHERFLOW_COLLECTOR_INFLUXDB_ORG:
         missing_config.append("WEATHERFLOW_COLLECTOR_INFLUXDB_ORG")
@@ -73,13 +71,9 @@ def validate_module_enablement():
         logger_ConfigValidator.info(f"{setting_name} module is {status}")
 
     # Log the status for each module
-    log_module_status(
-        "Collector Export", config.WEATHERFLOW_COLLECTOR_COLLECTOR_EXPORT_ENABLED
-    )
+    log_module_status("Collector Export", config.WEATHERFLOW_COLLECTOR_COLLECTOR_EXPORT_ENABLED)
     log_module_status("Storage File", config.WEATHERFLOW_COLLECTOR_STORAGE_FILE_ENABLED)
-    log_module_status(
-        "Storage InfluxDB", config.WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_ENABLED
-    )
+    log_module_status("Storage InfluxDB", config.WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_ENABLED)
     log_module_status(
         "Collector REST Export",
         config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_EXPORT_ENABLED,
@@ -104,12 +98,8 @@ def validate_module_enablement():
         "Collector REST Stats",
         config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_STATS_ENABLED,
     )
-    log_module_status(
-        "System Metrics", config.WEATHERFLOW_COLLECTOR_SYSTEM_METRICS_ENABLED
-    )
-    log_module_status(
-        "Collector UDP", config.WEATHERFLOW_COLLECTOR_COLLECTOR_UDP_ENABLED
-    )
+    log_module_status("System Metrics", config.WEATHERFLOW_COLLECTOR_SYSTEM_METRICS_ENABLED)
+    log_module_status("Collector UDP", config.WEATHERFLOW_COLLECTOR_COLLECTOR_UDP_ENABLED)
     log_module_status(
         "Collector WebSocket", config.WEATHERFLOW_COLLECTOR_COLLECTOR_WEBSOCKET_ENABLED
     )
@@ -123,8 +113,4 @@ def validate_module_enablement():
 
 
 def validate_all():
-    return (
-        validate_api_config()
-        and validate_module_enablement()
-        and validate_influxdb_config()
-    )
+    return validate_api_config() and validate_module_enablement() and validate_influxdb_config()

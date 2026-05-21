@@ -1,18 +1,16 @@
 # collector_rest_export.py
 
 
-import aiohttp
 import asyncio
-import logging
-from datetime import datetime, timedelta
-import config
-import utils.utils as utils
 import json
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-import time
+import aiohttp
 
+import config
 import logger
+import utils.utils as utils
 
 logger_RestExportCollector = logger.get_module_logger(__name__ + ".RestExportCollector")
 
@@ -22,9 +20,7 @@ class RestExportCollector:
         self.event_manager = event_manager
         self.api_key = config.WEATHERFLOW_COLLECTOR_API_TOKEN
         self.base_url = config.WEATHERFLOW_API_REST_IMPORT_URL
-        self.stats_url = (
-            config.WEATHERFLOW_API_REST_STATS_URL
-        )  # URL for fetching statistics
+        self.stats_url = config.WEATHERFLOW_API_REST_STATS_URL  # URL for fetching statistics
         self.module_name = "collector_rest_export"
         self.collector_type = "collector_rest_export"
 
@@ -55,7 +51,6 @@ class RestExportCollector:
         self, station_id, specific_date, semaphore, date_range, station_metadata
     ):
         async with semaphore:  # Using semaphore to control concurrency
-
             # Retrieve station time_zone from metadata
             station_time_zone = station_metadata[station_id].get("time_zone")
             if not station_time_zone:
@@ -74,9 +69,7 @@ class RestExportCollector:
 
             # Convert the specific date to time zone-aware datetime objects using ZoneInfo
             time_zone = ZoneInfo(station_time_zone)
-            start_date = datetime.strptime(specific_date, "%Y-%m-%d").replace(
-                tzinfo=time_zone
-            )
+            start_date = datetime.strptime(specific_date, "%Y-%m-%d").replace(tzinfo=time_zone)
             end_date = start_date + timedelta(days=1, seconds=-1)
 
             # Convert time zone-aware datetime objects to epoch time
@@ -169,12 +162,8 @@ class RestExportCollector:
         json_data_stats = await self.fetch_data(url)
         if json_data_stats:
             parsed_data_stats = json.loads(json_data_stats)
-            start_date = datetime.strptime(
-                parsed_data_stats.get("first_ob_day_local"), "%Y-%m-%d"
-            )
-            end_date = datetime.strptime(
-                parsed_data_stats.get("last_ob_day_local"), "%Y-%m-%d"
-            )
+            start_date = datetime.strptime(parsed_data_stats.get("first_ob_day_local"), "%Y-%m-%d")
+            end_date = datetime.strptime(parsed_data_stats.get("last_ob_day_local"), "%Y-%m-%d")
             return start_date, end_date
         else:
             logger_RestExportCollector.warning(
@@ -219,9 +208,7 @@ class RestExportCollector:
                     )
 
     async def run_once(self):
-        logger_RestExportCollector.info(
-            "Starting RestExportCollector for a single run."
-        )
+        logger_RestExportCollector.info("Starting RestExportCollector for a single run.")
         start_time = datetime.now()
         await self.process_stations(utils.StationMetadataSingleton().get_metadata())
         elapsed_time = datetime.now() - start_time

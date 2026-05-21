@@ -46,28 +46,20 @@ The StationMetadataManager is an integral part of the WeatherFlow Collector syst
 It works in conjunction with other components of the system to manage weather station data effectively.
 """
 
-import config
+import configparser
+import os
+import time
 
 # from api_data_saver import APIDataSaver
-from datetime import datetime
+import requests
+
+import config
+import logger
+import utils.utils as utils
 
 # from data_storage import DataStorage
 
-from logger import configure_logging
-import utils.utils as utils
-
-import configparser
-import json
-import logging
-import os
-import requests
-import time
-
-import logger
-
-logger_StationMetadataManager = logger.get_module_logger(
-    __name__ + ".StationMetadataManager"
-)
+logger_StationMetadataManager = logger.get_module_logger(__name__ + ".StationMetadataManager")
 
 # station_metadata = {}
 
@@ -76,9 +68,7 @@ class StationMetadataManager:
     def __init__(self):
 
         self.api_token = config.WEATHERFLOW_COLLECTOR_API_TOKEN
-        self.api_url = (
-            f"{config.WEATHERFLOW_API_REST_STATIONS_URL}?token={self.api_token}"
-        )
+        self.api_url = f"{config.WEATHERFLOW_API_REST_STATIONS_URL}?token={self.api_token}"
         self.config_file = config.WEATHERFLOW_COLLECTOR_CONFIG_FILE
         self.station_metadata = {}
         self.enabled_flag = {}
@@ -99,9 +89,7 @@ class StationMetadataManager:
             if response.headers.get("Content-Type") == "application/json":
                 return response.json()
             else:
-                logger_StationMetadataManager.error(
-                    "Unexpected content type in response"
-                )
+                logger_StationMetadataManager.error("Unexpected content type in response")
                 return None
 
         except requests.exceptions.Timeout:
@@ -113,9 +101,7 @@ class StationMetadataManager:
                 "Connection error occurred while fetching metadata from WeatherFlow API"
             )
         except requests.exceptions.HTTPError as e:
-            logger_StationMetadataManager.error(
-                f"HTTP error occurred while fetching metadata: {e}"
-            )
+            logger_StationMetadataManager.error(f"HTTP error occurred while fetching metadata: {e}")
         except requests.exceptions.RequestException as e:
             logger_StationMetadataManager.error(
                 f"Error fetching metadata from WeatherFlow API: {e}"
@@ -129,9 +115,7 @@ class StationMetadataManager:
 
         for station in metadata.get("stations", []):
             station_id = station.get("station_id")
-            logger_StationMetadataManager.debug(
-                f"Processing metadata for station ID: {station_id}"
-            )
+            logger_StationMetadataManager.debug(f"Processing metadata for station ID: {station_id}")
 
             # Initialize a list to store all devices for this station
             devices_info = []
@@ -143,9 +127,7 @@ class StationMetadataManager:
                     "serial_number": device.get("serial_number") or "Unknown",
                     "device_name": device.get("device_meta", {}).get("name", "Unknown"),
                     "agl": device.get("device_meta", {}).get("agl", 0.0),
-                    "environment": device.get("device_meta", {}).get(
-                        "environment", "Unknown"
-                    ),
+                    "environment": device.get("device_meta", {}).get("environment", "Unknown"),
                     "firmware_revision": device.get("firmware_revision") or "Unknown",
                     "hardware_revision": device.get("hardware_revision") or "Unknown",
                     "enabled": True,  # Set default enabled flag to True
@@ -186,9 +168,7 @@ class StationMetadataManager:
             for section in config_parser.sections():
                 if section.isdigit():  # Station section
                     station_id = int(section)
-                    enabled = config_parser.getboolean(
-                        section, "enabled", fallback=False
-                    )
+                    enabled = config_parser.getboolean(section, "enabled", fallback=False)
 
                     # Update the enabled flag for the station
                     if station_id in self.station_metadata:
@@ -222,9 +202,7 @@ class StationMetadataManager:
 
         # Add a general section to store the API token
         config_parser.add_section("General")
-        config_parser.set(
-            "General", "api_token", str(self.api_token)
-        )  # Ensure it's a string
+        config_parser.set("General", "api_token", str(self.api_token))  # Ensure it's a string
 
         # Iterate through station metadata to add sections for stations and devices
         for station_id, station_info in self.station_metadata.items():
@@ -235,13 +213,11 @@ class StationMetadataManager:
             config_parser.set(
                 station_section, "enabled", str(station_info["enabled"])
             )  # Ensure it's a string
-            config_parser.set(
-                station_section, "name", station_info.get("name", "Unknown")
-            )
+            config_parser.set(station_section, "name", station_info.get("name", "Unknown"))
 
             # Add sections for each device in the station
             for device in station_info.get("devices", []):
-                device_section = f'Device_{device["device_id"]}_{station_id}'
+                device_section = f"Device_{device['device_id']}_{station_id}"
                 config_parser.add_section(device_section)
 
                 # Set default values for the device
@@ -259,9 +235,7 @@ class StationMetadataManager:
                     "serial_number",
                     device.get("serial_number", "Unknown"),
                 )
-                config_parser.set(
-                    device_section, "name", device.get("device_name", "Unknown")
-                )
+                config_parser.set(device_section, "name", device.get("device_name", "Unknown"))
 
         # Write the configuration to the file
         try:
@@ -271,9 +245,7 @@ class StationMetadataManager:
                     "Configuration file created with default settings."
                 )
         except Exception as e:
-            logger_StationMetadataManager.error(
-                f"Error writing configuration file: {e}"
-            )
+            logger_StationMetadataManager.error(f"Error writing configuration file: {e}")
 
     # @utils.measure_execution_time("update_config_file")
     def update_config_file(self):
@@ -288,9 +260,7 @@ class StationMetadataManager:
                 config_parser.add_section(station_section)
 
             # Only update name for stations, do not touch 'enabled' flag
-            config_parser.set(
-                station_section, "name", station_info.get("name", "Unknown")
-            )
+            config_parser.set(station_section, "name", station_info.get("name", "Unknown"))
 
             for device in station_info.get("devices", []):
                 device_section = f"Device_{device['device_id']}_{station_id}"
@@ -309,9 +279,7 @@ class StationMetadataManager:
                     "serial_number",
                     device.get("serial_number", "Unknown"),
                 )
-                config_parser.set(
-                    device_section, "name", device.get("device_name", "Unknown")
-                )
+                config_parser.set(device_section, "name", device.get("device_name", "Unknown"))
 
         with open(self.config_file, "w") as configfile:
             config_parser.write(configfile)

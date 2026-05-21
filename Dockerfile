@@ -1,48 +1,46 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12.3-slim
+# syntax=docker/dockerfile:1.7
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+FROM ghcr.io/astral-sh/uv:0.11-python3.12-bookworm-slim AS builder
 
-# Create a non-root user for security
-RUN groupadd -r weatherflow && useradd -r -g weatherflow weatherflow
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PYTHON_DOWNLOADS=never \
+    UV_PROJECT_ENVIRONMENT=/app/.venv
 
-# Set the working directory
-WORKDIR /app/weatherflow-collector
+WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt ./
+COPY pyproject.toml uv.lock ./
 
-# Install Python dependencies
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
 
-# Copy source code
+
+FROM python:3.12-slim-bookworm
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/app/.venv/bin:${PATH}"
+
+RUN groupadd -r weatherflow && useradd -r -g weatherflow weatherflow
+
+WORKDIR /app/weatherflow-collector
+
+COPY --from=builder /app/.venv /app/.venv
+
 COPY src/ ./src/
-COPY *.py ./
 
-# Create necessary directories
 RUN mkdir -p logs api_data_saver export cache && \
-    chown -R weatherflow:weatherflow /app/weatherflow-collector
+    chown -R weatherflow:weatherflow /app/weatherflow-collector /app/.venv
 
-# Switch to non-root user
 USER weatherflow
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD python3 -c "import requests; requests.get('http://localhost:8080/health', timeout=5)" || exit 1
 
-# Expose ports
 EXPOSE 6789 50222/udp
 
-# Run the application
 CMD ["python3", "src/weatherflow-collector.py"]

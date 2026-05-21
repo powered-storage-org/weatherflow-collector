@@ -1,12 +1,12 @@
 # collector_rest_observations_device.py
 
 import asyncio
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta
 
 import config
-import utils.utils as utils
 import logger
+import utils.utils as utils
 
 logger_RESTObservationsDeviceCollector = logger.get_module_logger(
     __name__ + ".RESTObservationsDeviceCollector"
@@ -29,9 +29,7 @@ class RESTObservationsDeviceCollector:
 
         try:
             url = f"{self.base_url}/device/{device_id}?api_key={self.api_key}"
-            logger_RESTObservationsDeviceCollector.debug(
-                f"Fetching data for device ID {device_id}"
-            )
+            logger_RESTObservationsDeviceCollector.debug(f"Fetching data for device ID {device_id}")
 
             json_data = await utils.fetch_data_from_url(
                 url, self.collector_type, self.event_manager
@@ -98,7 +96,7 @@ class RESTObservationsDeviceCollector:
     async def retrieve_and_save_data(self):
         try:
             station_metadata = utils.StationMetadataSingleton().get_metadata()
-            
+
             # Calculate delay based on API rate limit to avoid 429 errors
             # API limit is typically 15 requests per minute
             delay_between_requests = 60.0 / config.WEATHERFLOW_COLLECTOR_API_RATE_LIMIT
@@ -107,10 +105,7 @@ class RESTObservationsDeviceCollector:
                 if station_info.get("enabled", False):
                     devices = station_info.get("devices", [])
                     for device in devices:
-                        if (
-                            device.get("enabled", False)
-                            and device.get("device_type") != "HB"
-                        ):
+                        if device.get("enabled", False) and device.get("device_type") != "HB":
                             device_id = device.get("device_id")
                             if device_id:
                                 await self.handle_latest_device_observation(device_id)
@@ -120,9 +115,7 @@ class RESTObservationsDeviceCollector:
                                 )
                                 await asyncio.sleep(delay_between_requests)
         except Exception as e:
-            logger_RESTObservationsDeviceCollector.error(
-                f"Error in retrieve_and_save_data: {e}"
-            )
+            logger_RESTObservationsDeviceCollector.error(f"Error in retrieve_and_save_data: {e}")
 
     async def run_forever(self):
         logger_RESTObservationsDeviceCollector.info(
@@ -144,9 +137,7 @@ class RESTObservationsDeviceCollector:
                     0,
                 )
                 next_start_time = datetime.now() + timedelta(seconds=sleep_time)
-                next_start_time_formatted = next_start_time.strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
+                next_start_time_formatted = next_start_time.strftime("%Y-%m-%d %H:%M:%S")
 
                 logger_RESTObservationsDeviceCollector.info(
                     f"Sleeping for {sleep_time:.2f} seconds. Next cycle will start at approximately {next_start_time_formatted}."
@@ -158,9 +149,7 @@ class RESTObservationsDeviceCollector:
                 "RESTObservationsDeviceCollector received cancellation signal."
             )
         except Exception as e:
-            logger_RESTObservationsDeviceCollector.error(
-                f"Unexpected error in run_forever: {e}"
-            )
+            logger_RESTObservationsDeviceCollector.error(f"Unexpected error in run_forever: {e}")
         finally:
             logger_RESTObservationsDeviceCollector.info(
                 "RESTObservationsDeviceCollector shutting down."

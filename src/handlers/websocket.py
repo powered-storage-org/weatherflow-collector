@@ -3,21 +3,21 @@
 """
 WeatherFlow Collector Data Handlers
 
-This module forms a part of the WeatherFlow Collector system, a robust application designed to 
-gather, process, and store weather data from various sources. It caters to diverse data types 
+This module forms a part of the WeatherFlow Collector system, a robust application designed to
+gather, process, and store weather data from various sources. It caters to diverse data types
 and formats, making it an integral component of the WeatherFlow ecosystem.
 
 Key Features:
-- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket 
+- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket
   streams, and REST API responses.
-- Data normalization: Transforms disparate data formats into a unified structure suitable for 
+- Data normalization: Transforms disparate data formats into a unified structure suitable for
   storage and analysis.
-- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient 
+- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient
   data management and retrieval.
 
 Usage:
-This module is used within the WeatherFlow Collector system and requires data inputs from 
-UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with 
+This module is used within the WeatherFlow Collector system and requires data inputs from
+UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with
 appropriate configurations for each data source and the InfluxDB instance.
 
 Dependencies:
@@ -34,44 +34,26 @@ Classes:
 - InfluxDBStorage: Interfaces with InfluxDB for data storage.
 
 Methods:
-Each class contains specific methods for processing its designated data type and communicating 
-with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(), 
+Each class contains specific methods for processing its designated data type and communicating
+with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(),
 and save_data().
 
 Author: [Your Name or Team's Name]
 Last Update: [Last Update Date]
 
 Note:
-This module is part of the WeatherFlow Collector system and is not intended to be used as a 
-standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data 
+This module is part of the WeatherFlow Collector system and is not intended to be used as a
+standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data
 streams.
 """
 
-import config
-
-
-from utils.calculate_weather_metrics import CalculateWeatherMetrics
 
 # Import necessary libraries for InfluxDB communication and others
 
-import time
-import pytz
-from datetime import datetime, timedelta
-import json
-import inspect
-import os
-import asyncio
-import traceback
-
-import multiprocessing
-
 # from concurrent.futures import ThreadPoolExecutor
-
-from concurrent.futures import ProcessPoolExecutor
-
-
 import logger
 import utils.utils as utils
+from utils.calculate_weather_metrics import CalculateWeatherMetrics
 
 logger_BaseDataHandler = logger.get_module_logger(__name__ + ".BaseDataHandler")
 
@@ -115,9 +97,7 @@ class WebSocketHandler(BaseDataHandler):
             handler = self.data_handlers[data_type]
             await handler(full_data)
         else:
-            logger_WebSocketHandler.error(
-                f"Unknown data type for WebSocket client: {data_type}"
-            )
+            logger_WebSocketHandler.error(f"Unknown data type for WebSocket client: {data_type}")
 
         logger_WebSocketHandler.debug("Data processed by WebSocketHandler")
 
@@ -182,9 +162,7 @@ class WebSocketHandler(BaseDataHandler):
             }
 
             # Publish the data using the event manager
-            await self.event_manager.publish(
-                "influxdb_storage_event", collector_data_with_meta
-            )
+            await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
             logger_WebSocketHandler.debug(
                 f"Published {measurement} data to event manager for device {device_id}."
@@ -201,9 +179,7 @@ class WebSocketHandler(BaseDataHandler):
 
         else:
             # Log a warning if the data is not in the expected format
-            logger_WebSocketHandler.warning(
-                f"Invalid evt_precip data format: {full_data}"
-            )
+            logger_WebSocketHandler.warning(f"Invalid evt_precip data format: {full_data}")
 
     @utils.calculate_timestamp_delta("handle_evt_strike")
     async def handle_evt_strike(self, full_data):
@@ -268,9 +244,7 @@ class WebSocketHandler(BaseDataHandler):
             }
 
             # Publish the data using the event manager
-            await self.event_manager.publish(
-                "influxdb_storage_event", collector_data_with_meta
-            )
+            await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
             logger_WebSocketHandler.debug(
                 f"Published {measurement} data to event manager for device {device_id}."
@@ -287,9 +261,7 @@ class WebSocketHandler(BaseDataHandler):
 
         else:
             # Log a warning if the data is not in the expected format
-            logger_WebSocketHandler.warning(
-                f"Invalid evt_strike data format: {full_data}"
-            )
+            logger_WebSocketHandler.warning(f"Invalid evt_strike data format: {full_data}")
 
     @utils.calculate_timestamp_delta("handle_rapid_wind")
     async def handle_rapid_wind(self, full_data):
@@ -354,9 +326,7 @@ class WebSocketHandler(BaseDataHandler):
             }
 
             # Publish the data using the event manager
-            await self.event_manager.publish(
-                "influxdb_storage_event", collector_data_with_meta
-            )
+            await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
             logger_WebSocketHandler.debug(
                 f"Published {measurement} data to event manager for device {device_id}."
@@ -373,9 +343,7 @@ class WebSocketHandler(BaseDataHandler):
 
         else:
             # Log a warning if the data is not in the expected format
-            logger_WebSocketHandler.warning(
-                f"Invalid rapid_wind data format: {full_data}"
-            )
+            logger_WebSocketHandler.warning(f"Invalid rapid_wind data format: {full_data}")
 
     @utils.calculate_timestamp_delta("handle_obs_st")
     async def handle_obs_st(self, full_data):
@@ -429,9 +397,7 @@ class WebSocketHandler(BaseDataHandler):
             # Process summary and trend data
             summary = data.get("summary", {})
             trend_mapping = {"falling": -1, "steady": 0, "rising": 1, "unknown": None}
-            fields["pressure_trend"] = trend_mapping.get(
-                summary.get("pressure_trend"), None
-            )
+            fields["pressure_trend"] = trend_mapping.get(summary.get("pressure_trend"), None)
             for key in summary:
                 if key != "pressure_trend" and key != "raining_minutes":
                     fields[key] = summary[key]
@@ -449,9 +415,7 @@ class WebSocketHandler(BaseDataHandler):
                 if key in fields
             }
             weather_data["elevation"] = elevation
-            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
-                weather_data
-            )
+            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
             fields.update(additional_metrics)
 
             # Extract station information
@@ -498,9 +462,7 @@ class WebSocketHandler(BaseDataHandler):
             }
 
             # Publish the data using the event manager
-            await self.event_manager.publish(
-                "influxdb_storage_event", collector_data_with_meta
-            )
+            await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
             logger_WebSocketHandler.debug(
                 f"Published {measurement} data to event manager for device {device_id}."
@@ -516,9 +478,7 @@ class WebSocketHandler(BaseDataHandler):
             self.current_timestamp = fields["timestamp"]
 
         else:
-            logger_WebSocketHandler.warning(
-                "Invalid or incomplete obs_st data received"
-            )
+            logger_WebSocketHandler.warning("Invalid or incomplete obs_st data received")
 
     @utils.calculate_timestamp_delta("handle_obs_air")
     async def handle_obs_air(self, full_data):
@@ -566,9 +526,7 @@ class WebSocketHandler(BaseDataHandler):
             }
 
             # Calculate additional weather metrics
-            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
-                weather_data
-            )
+            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
             fields.update(additional_metrics)
 
             # Extract station information
@@ -615,9 +573,7 @@ class WebSocketHandler(BaseDataHandler):
             }
 
             # Publish the data using the event manager
-            await self.event_manager.publish(
-                "influxdb_storage_event", collector_data_with_meta
-            )
+            await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
             # Setting attirbutes for the delta timestamp decorator
 
@@ -633,9 +589,7 @@ class WebSocketHandler(BaseDataHandler):
             )
 
         else:
-            logger_WebSocketHandler.warning(
-                "Invalid or incomplete obs_air data received"
-            )
+            logger_WebSocketHandler.warning("Invalid or incomplete obs_air data received")
 
     @utils.calculate_timestamp_delta("handle_obs_sky")
     async def handle_obs_sky(self, full_data):
@@ -726,9 +680,7 @@ class WebSocketHandler(BaseDataHandler):
             }
 
             # Publish the data using the event manager
-            await self.event_manager.publish(
-                "influxdb_storage_event", collector_data_with_meta
-            )
+            await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
             logger_WebSocketHandler.debug(
                 f"Published {measurement} data to event manager for device {device_id}."
@@ -744,9 +696,7 @@ class WebSocketHandler(BaseDataHandler):
             self.current_timestamp = fields["timestamp"]
 
         else:
-            logger_WebSocketHandler.warning(
-                "Invalid or incomplete obs_sky data received"
-            )
+            logger_WebSocketHandler.warning("Invalid or incomplete obs_sky data received")
 
     @utils.calculate_timestamp_delta("handle_geo_strike")
     async def handle_geo_strike(self, full_data):
@@ -819,9 +769,7 @@ class WebSocketHandler(BaseDataHandler):
         }
 
         # Publish the data using the event manager
-        await self.event_manager.publish(
-            "influxdb_storage_event", collector_data_with_meta
-        )
+        await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
         # Setting attirbutes for the delta timestamp decorator
 

@@ -1,9 +1,7 @@
 # handler.py
 
-import config
-import time
-import os
 import asyncio
+import time
 
 import logger
 import utils.utils as utils
@@ -13,8 +11,8 @@ from .rest_import import RESTImportHandler
 from .rest_observations_device import RESTObservationsDeviceHandler
 from .rest_observations_station import RESTObservationsStationHandler
 from .rest_stats import RESTStatsHandler
-from .websocket import WebSocketHandler
 from .udp import UDPHandler
+from .websocket import WebSocketHandler
 
 logger_Handler = logger.get_module_logger(__name__ + ".Handler")
 
@@ -25,12 +23,8 @@ class Handler:
         self.event_manager = event_manager
         self.handlers = {
             "collector_udp": UDPHandler(event_manager),
-            "collector_rest_observations_device": RESTObservationsDeviceHandler(
-                event_manager
-            ),
-            "collector_rest_observations_station": RESTObservationsStationHandler(
-                event_manager
-            ),
+            "collector_rest_observations_device": RESTObservationsDeviceHandler(event_manager),
+            "collector_rest_observations_station": RESTObservationsStationHandler(event_manager),
             "collector_rest_forecasts": RESTForecastsHandler(event_manager),
             "collector_websocket": WebSocketHandler(event_manager),
             "collector_rest_stats": RESTStatsHandler(event_manager),
@@ -48,9 +42,7 @@ class Handler:
 
         metadata = full_data.get("metadata", {})
         collector_type = metadata.get("collector_type")
-        metric_name = (
-            f"update_{collector_type}"  # Define metric_name based on collector_type
-        )
+        metric_name = f"update_{collector_type}"  # Define metric_name based on collector_type
 
         logger_Handler.debug(f"Received full_data for collector type: {collector_type}")
 
@@ -58,7 +50,9 @@ class Handler:
         if handler:
             # Directly creating an asyncio task for the async handler method
             task = asyncio.create_task(handler.process_data(full_data))
-            task.collector_type = collector_type  # Assign collector_type to the task for later identification
+            task.collector_type = (
+                collector_type  # Assign collector_type to the task for later identification
+            )
 
             if collector_type not in self.tasks_by_collector_type:
                 self.tasks_by_collector_type[collector_type] = []
@@ -79,9 +73,7 @@ class Handler:
                 f"Active tasks for {collector_type}: {self.metrics_by_collector_type[collector_type]['active_tasks']}"
             )
         else:
-            logger_Handler.error(
-                f"No handler found for collector type: {collector_type}"
-            )
+            logger_Handler.error(f"No handler found for collector type: {collector_type}")
 
         processing_duration = time.time() - request_processing_start
         logger_Handler.debug(

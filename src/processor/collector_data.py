@@ -3,9 +3,9 @@
 """
 CollectorDataProcessor Module for WeatherFlow Collector
 
-This module provides functionalities for processing and enriching incoming data from 
-various clients within the WeatherFlow Collector system. It acts as a mediator to 
-transform raw collector data, enrich it with additional metadata, and normalize it 
+This module provides functionalities for processing and enriching incoming data from
+various clients within the WeatherFlow Collector system. It acts as a mediator to
+transform raw collector data, enrich it with additional metadata, and normalize it
 for further processing or storage.
 
 Key Features:
@@ -15,9 +15,9 @@ Key Features:
 - Ensures data consistency and structure before forwarding to storage or other clients.
 
 Usage:
-The CollectorDataProcessor is an integral part of the data pipeline, transforming incoming data 
-from various sources into a structured and enriched format. It subscribes to raw data events, 
-processes the data, and then publishes it for other components like data storage handlers or 
+The CollectorDataProcessor is an integral part of the data pipeline, transforming incoming data
+from various sources into a structured and enriched format. It subscribes to raw data events,
+processes the data, and then publishes it for other components like data storage handlers or
 real-time data streaming services.
 
 Dependencies:
@@ -35,23 +35,15 @@ Author: [Your Name or Team's Name]
 Last Update: [Last Update Date]
 
 Note:
-CollectorDataProcessor plays a pivotal role in ensuring data integrity and enrichment in the 
-WeatherFlow Collector system. It provides a customizable and extendable framework for 
+CollectorDataProcessor plays a pivotal role in ensuring data integrity and enrichment in the
+WeatherFlow Collector system. It provides a customizable and extendable framework for
 processing diverse data from meteorological sensors.
 """
 
-
-import json
-from datetime import datetime
-
-
-import asyncio
-import inspect
-import threading
 import copy
 
-import utils.utils as utils
 import logger
+import utils.utils as utils
 
 logger_CollectorDataProcessor = logger.get_module_logger(__name__ + ".CollectorDataProcessor")
 
@@ -75,11 +67,17 @@ class CollectorDataProcessor:
             if collector_type == "rest_export_client":
                 # Publish processed data for rest_export_client
                 await self.event_manager.publish(
-                    "processed_export_event", processed_data, publisher="CollectorDataProcessor.update"
+                    "processed_export_event",
+                    processed_data,
+                    publisher="CollectorDataProcessor.update",
                 )
             else:
                 # Publish processed data for other collector types
-                await self.event_manager.publish("processed_data_event", processed_data, publisher="CollectorDataProcessor.update")
+                await self.event_manager.publish(
+                    "processed_data_event",
+                    processed_data,
+                    publisher="CollectorDataProcessor.update",
+                )
         except Exception as e:
             logger_CollectorDataProcessor.error(f"Error processing data: {e}")
 
@@ -121,14 +119,10 @@ class CollectorDataProcessor:
                     current_station_info,
                     current_device_info,
                 ) = utils.get_station_and_device_config_by_serial_number(serial_number)
-                logger_CollectorDataProcessor.debug(
-                    f"Current station info: {current_station_info}"
-                )
+                logger_CollectorDataProcessor.debug(f"Current station info: {current_station_info}")
                 if current_station_info:
                     found_station_id = current_station_info.get("station_id")
-                    logger_CollectorDataProcessor.debug(
-                        f"Found station ID: {found_station_id}"
-                    )
+                    logger_CollectorDataProcessor.debug(f"Found station ID: {found_station_id}")
 
             elif device_id:
                 (
@@ -147,15 +141,11 @@ class CollectorDataProcessor:
                         break
 
             elif station_id:  # Use the found station_id
-                current_station_info = utils.get_station_config_by_station_id(
-                    station_id
-                )
+                current_station_info = utils.get_station_config_by_station_id(station_id)
             elif hub_sn:
                 current_station_info = utils.get_station_config_by_hub_sn(hub_sn)
 
-            final_station_id = (
-                station_id if station_id is not None else found_station_id
-            )
+            final_station_id = station_id if station_id is not None else found_station_id
 
             if current_station_info:
                 # Add enhanced meta information as a new section in the 'data' dictionary
@@ -188,12 +178,8 @@ class CollectorDataProcessor:
             #    f"normalized_fields after: {normalized_fields}"
             # )
 
-            logger_CollectorDataProcessor.debug(
-                "Data transformed and enriched successfully"
-            )
+            logger_CollectorDataProcessor.debug("Data transformed and enriched successfully")
             return normalized_fields
         except Exception as e:
-            logger_CollectorDataProcessor.error(
-                f"Error transforming or enriching data: {e}"
-            )
+            logger_CollectorDataProcessor.error(f"Error transforming or enriching data: {e}")
             return None

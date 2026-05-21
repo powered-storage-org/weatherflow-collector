@@ -3,21 +3,21 @@
 """
 WeatherFlow Collector Data Handlers
 
-This module forms a part of the WeatherFlow Collector system, a robust application designed to 
-gather, process, and store weather data from various sources. It caters to diverse data types 
+This module forms a part of the WeatherFlow Collector system, a robust application designed to
+gather, process, and store weather data from various sources. It caters to diverse data types
 and formats, making it an integral component of the WeatherFlow ecosystem.
 
 Key Features:
-- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket 
+- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket
   streams, and REST API responses.
-- Data normalization: Transforms disparate data formats into a unified structure suitable for 
+- Data normalization: Transforms disparate data formats into a unified structure suitable for
   storage and analysis.
-- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient 
+- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient
   data management and retrieval.
 
 Usage:
-This module is used within the WeatherFlow Collector system and requires data inputs from 
-UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with 
+This module is used within the WeatherFlow Collector system and requires data inputs from
+UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with
 appropriate configurations for each data source and the InfluxDB instance.
 
 Dependencies:
@@ -34,44 +34,28 @@ Classes:
 - InfluxDBStorage: Interfaces with InfluxDB for data storage.
 
 Methods:
-Each class contains specific methods for processing its designated data type and communicating 
-with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(), 
+Each class contains specific methods for processing its designated data type and communicating
+with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(),
 and save_data().
 
 Author: [Your Name or Team's Name]
 Last Update: [Last Update Date]
 
 Note:
-This module is part of the WeatherFlow Collector system and is not intended to be used as a 
-standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data 
+This module is part of the WeatherFlow Collector system and is not intended to be used as a
+standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data
 streams.
 """
 
-import config
-
-
-from utils.calculate_weather_metrics import CalculateWeatherMetrics
+from datetime import datetime
 
 # Import necessary libraries for InfluxDB communication and others
-
-import time
 import pytz
-from datetime import datetime, timedelta
-import json
-import inspect
-import os
-import asyncio
-import traceback
-
-import multiprocessing
 
 # from concurrent.futures import ThreadPoolExecutor
-
-from concurrent.futures import ProcessPoolExecutor
-
-
 import logger
 import utils.utils as utils
+from utils.calculate_weather_metrics import CalculateWeatherMetrics
 
 logger_BaseDataHandler = logger.get_module_logger(__name__ + ".BaseDataHandler")
 
@@ -81,9 +65,7 @@ class BaseDataHandler:
         raise NotImplementedError("This method should be implemented by subclasses.")
 
 
-logger_RESTForecastsHandler = logger.get_module_logger(
-    __name__ + ".RESTForecastsHandler"
-)
+logger_RESTForecastsHandler = logger.get_module_logger(__name__ + ".RESTForecastsHandler")
 
 
 class RESTForecastsHandler(BaseDataHandler):
@@ -95,11 +77,7 @@ class RESTForecastsHandler(BaseDataHandler):
     async def process_data(self, full_data):
         logger_RESTForecastsHandler.debug("Starting to process forecast data")
 
-        if (
-            full_data
-            and "metadata" in full_data
-            and "station_id" in full_data["metadata"]
-        ):
+        if full_data and "metadata" in full_data and "station_id" in full_data["metadata"]:
             station_id = full_data["metadata"]["station_id"]
 
             # Process data with the extracted station_id
@@ -143,9 +121,7 @@ class RESTForecastsHandler(BaseDataHandler):
         weather_data = {k: fields.get(k) for k in weather_data_keys if k in fields}
         weather_data["elevation"] = station_info.get("station_elevation", 0)
 
-        additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
-            weather_data
-        )
+        additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
         fields.update(additional_metrics)
 
         # Normalize the fields
@@ -186,13 +162,9 @@ class RESTForecastsHandler(BaseDataHandler):
         }
 
         # Publish the data using the event manager
-        await self.event_manager.publish(
-            "influxdb_storage_event", collector_data_with_meta
-        )
+        await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
-        logger_RESTForecastsHandler.debug(
-            f"Published weatherflow_obs data to event manager"
-        )
+        logger_RESTForecastsHandler.debug("Published weatherflow_obs data to event manager")
 
     async def handle_forecast_daily(self, full_data):
         metadata = full_data.get("metadata", {})
@@ -228,17 +200,13 @@ class RESTForecastsHandler(BaseDataHandler):
 
             # Create "day_end_local" and add 86399 seconds to "day_start_local"
             day_start_local = daily.get("day_start_local")
-            day_end_local = (
-                day_start_local + 86399 if day_start_local is not None else None
-            )
+            day_end_local = day_start_local + 86399 if day_start_local is not None else None
             fields["day_end_local"] = day_end_local
 
             # Calculating additional metrics for high and low temperatures
             high_temp = fields.get("air_temp_high")
             low_temp = fields.get("air_temp_low")
-            relative_humidity = (
-                50  # Assuming average relative humidity for calculations
-            )
+            relative_humidity = 50  # Assuming average relative humidity for calculations
 
             # Process for high and low temperatures
             for temp_type in ["high_temp", "low_temp"]:
@@ -249,8 +217,8 @@ class RESTForecastsHandler(BaseDataHandler):
                         "relative_humidity": relative_humidity,
                     }
 
-                    additional_metrics = (
-                        CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
+                    additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
+                        weather_data
                     )
                     for key, value in additional_metrics.items():
                         fields[f"{key}_{temp_type}"] = value
@@ -346,9 +314,7 @@ class RESTForecastsHandler(BaseDataHandler):
                 "elevation": elevation,
             }
 
-            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
-                weather_data
-            )
+            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
             fields.update(additional_metrics)
 
             # Normalize the observation fields

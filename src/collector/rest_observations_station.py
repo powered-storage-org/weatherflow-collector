@@ -1,7 +1,7 @@
 """
 collector_rest_observations_station.py
 
-This module defines the RESTObservationsStationCollector class, which handles API requests to the WeatherFlow Smart Weather API. 
+This module defines the RESTObservationsStationCollector class, which handles API requests to the WeatherFlow Smart Weather API.
 It retrieves the latest observations for weather stations and publishes the data for further processing and analysis.
 
 Key Features:
@@ -11,7 +11,7 @@ Key Features:
 - Publishes the processed data to an event manager.
 
 Usage:
-Initialize the RESTObservationsStationCollector class with an event manager instance and a station configuration. 
+Initialize the RESTObservationsStationCollector class with an event manager instance and a station configuration.
 It periodically fetches the latest weather observations based on the provided configuration and publishes this data.
 
 Dependencies:
@@ -26,20 +26,15 @@ Author: Dave Schmid
 Created: 2023-12-17
 """
 
-import aiohttp
 import asyncio
-import logging
-from datetime import datetime, timedelta
 import time
-
+from datetime import datetime, timedelta
 
 import config
-import utils.utils as utils
 
-
-#from utils.calculate_weather_metrics import CalculateWeatherMetrics
-
+# from utils.calculate_weather_metrics import CalculateWeatherMetrics
 import logger
+import utils.utils as utils
 
 logger_RESTObservationsStationCollector = logger.get_module_logger(
     __name__ + ".RESTObservationsStationCollector"
@@ -89,7 +84,9 @@ class RESTObservationsStationCollector:
                     }
 
                     await self.event_manager.publish(
-                        "collector_data_event", data_with_metadata, publisher="RESTObservationsStationCollector.handle_latest_station_observation"
+                        "collector_data_event",
+                        data_with_metadata,
+                        publisher="RESTObservationsStationCollector.handle_latest_station_observation",
                     )
                     logger_RESTObservationsStationCollector.debug(
                         f"Published data to event manager for station ID {station_id}"
@@ -145,11 +142,11 @@ class RESTObservationsStationCollector:
 
     async def retrieve_and_save_data(self):
         station_metadata = utils.StationMetadataSingleton().get_metadata()
-        
+
         # Calculate delay based on API rate limit to avoid 429 errors
         # API limit is typically 15 requests per minute
         delay_between_requests = 60.0 / config.WEATHERFLOW_COLLECTOR_API_RATE_LIMIT
-        
+
         for station_id, station_info in station_metadata.items():
             if station_info.get("enabled", False):
                 await self.handle_latest_station_observation(station_id)

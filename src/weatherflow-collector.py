@@ -3,9 +3,9 @@
 """
 WeatherFlow Collector Main Module
 
-This module serves as the entry point for the WeatherFlow Collector system, an advanced framework designed 
-to gather, process, and distribute meteorological data from various sources. It integrates several components 
-like WebSocket clients, REST API clients, and UDP listeners to collect data, which is then processed and 
+This module serves as the entry point for the WeatherFlow Collector system, an advanced framework designed
+to gather, process, and distribute meteorological data from various sources. It integrates several components
+like WebSocket clients, REST API clients, and UDP listeners to collect data, which is then processed and
 optionally forwarded to different endpoints such as InfluxDB, file systems, or WebSocket servers.
 
 Key Features:
@@ -16,7 +16,7 @@ Key Features:
 - Configurable data forwarding to InfluxDB, file systems, and WebSocket servers.
 
 Usage:
-The main module initializes various components based on the system configuration and orchestrates their 
+The main module initializes various components based on the system configuration and orchestrates their
 interaction. It sets up the event manager, data processors, and various clients (UDP, REST, WebSocket, etc.).
 It runs asynchronously, continuously managing the flow of data across the system.
 
@@ -42,13 +42,11 @@ WeatherFlow Collector is specifically designed to work with WeatherFlow's meteor
 Modifications may be required for use with other systems or data sources.
 """
 
-
-import asyncio
 import argparse
-import config
-import threading
-import logger
+import asyncio
 
+import config
+import logger
 from collector.rest_export import RestExportCollector
 from collector.rest_forecasts import RestForcecastsCollector
 from collector.rest_import import RestImportCollector
@@ -57,27 +55,33 @@ from collector.rest_observations_station import RESTObservationsStationCollector
 from collector.rest_stats import RestStatsCollector
 from collector.udp import UDPCollector
 from collector.websocket import WebsocketCollector
+from config_validator import validate_all
 from event_manager import EventManager
+from handlers.current_conditions import CurrentConditionsHandler
+from handlers.handler import Handler
+from handlers.system_metrics import SystemMetricsHandler
 from processor.collector_data import CollectorDataProcessor
 from processor.export import ExportProcessor
 from provider.websocket_server import WebSocketServerProvider
 from station_metadata_manager import StationMetadataManager
 from storage.file import FileStorage
-from handlers.handler import Handler
 from storage.influxdb import InfluxDBStorage
-from handlers.system_metrics import SystemMetricsHandler
-from handlers.current_conditions import CurrentConditionsHandler
-from config_validator import validate_all
 
 # from vineyard_vantage.vineyard_vantage_handler import VineyardVantageHandler
 
 
 # Parse command line arguments
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='WeatherFlow Collector - Meteorological Data Collection System')
-    parser.add_argument('--info-only', action='store_true', 
-                       help='Enable info-only logging mode (overrides environment variables)')
+    parser = argparse.ArgumentParser(
+        description="WeatherFlow Collector - Meteorological Data Collection System"
+    )
+    parser.add_argument(
+        "--info-only",
+        action="store_true",
+        help="Enable info-only logging mode (overrides environment variables)",
+    )
     return parser.parse_args()
+
 
 # Initialize logger
 logger_main = logger.get_module_logger()
@@ -86,9 +90,7 @@ logger_main = logger.get_module_logger()
 async def setup_app():
 
     if not validate_all():
-        logger_main.error(
-            "Configuration validation failed. Check the logs for details."
-        )
+        logger_main.error("Configuration validation failed. Check the logs for details.")
         raise Exception("Configuration validation failed")
 
     station_metadata_manager = StationMetadataManager()
@@ -169,18 +171,14 @@ async def setup_app():
 
     if config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_DEVICE_ENABLED:
         logger_main.info("collector_rest_observations_device enabled.")
-        collector_rest_observations_device = RESTObservationsDeviceCollector(
-            event_manager
-        )
+        collector_rest_observations_device = RESTObservationsDeviceCollector(event_manager)
         asyncio.create_task(collector_rest_observations_device.run_forever())
     else:
         logger_main.info("collector_rest_observations_device disabled.")
 
     if config.WEATHERFLOW_COLLECTOR_COLLECTOR_REST_OBSERVATIONS_STATION_ENABLED:
         logger_main.info("collector_rest_observations_station enabled.")
-        collector_rest_observations_station = RESTObservationsStationCollector(
-            event_manager
-        )
+        collector_rest_observations_station = RESTObservationsStationCollector(event_manager)
         asyncio.create_task(collector_rest_observations_station.run_forever())
     else:
         logger_main.info("collector_rest_observations_station disabled.")
@@ -237,6 +235,7 @@ async def setup_app():
 
     logger_main.info("vineyard_vantage_handler disabled (module not available).")
 
+
 ## Vineyard Vantage Conditional Startup End
 
 
@@ -254,22 +253,22 @@ async def main_async():
 if __name__ == "__main__":
     # Parse command line arguments
     args = parse_arguments()
-    
+
     # Apply info-only logging configuration if requested via command line or environment variable
     if args.info_only or config.WEATHERFLOW_COLLECTOR_LOGGER_INFO_ONLY_MODE:
         # Override console logging configuration for info-only mode
         config.WEATHERFLOW_COLLECTOR_LOGGER_CONSOLE_ENABLED = True
         config.WEATHERFLOW_COLLECTOR_LOGGER_FILE_ENABLED = False
-        
+
         # Set all console log levels to INFO
         for module in config.WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS:
             config.WEATHERFLOW_COLLECTOR_CONSOLE_LOG_LEVELS[module] = "INFO"
-        
+
         # Reconfigure logging with new settings
         logger.configure_logging()
         logger_main = logger.get_module_logger()
         logger_main.info("Info-only logging mode enabled")
-    
+
     try:
         asyncio.run(main_async())
     except KeyboardInterrupt:

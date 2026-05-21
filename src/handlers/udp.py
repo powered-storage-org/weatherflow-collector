@@ -1,30 +1,10 @@
 # udp.py
 
 
-import config
-
-
-from utils.calculate_weather_metrics import CalculateWeatherMetrics
-
-
-import time
-import pytz
-from datetime import datetime, timedelta
-import json
-import inspect
-import os
-import asyncio
-import traceback
-
-import multiprocessing
-
 # from concurrent.futures import ThreadPoolExecutor
-
-from concurrent.futures import ProcessPoolExecutor
-
-
 import logger
 import utils.utils as utils
+from utils.calculate_weather_metrics import CalculateWeatherMetrics
 
 logger_BaseDataHandler = logger.get_module_logger(__name__ + ".BaseDataHandler")
 
@@ -141,9 +121,7 @@ class UDPHandler(BaseDataHandler):
                 f"Published rapid_wind data to event manager for device {serial_number}"
             )
 
-            logger_UDPHandler.debug(
-                f"collector_data_with_meta: {collector_data_with_meta}"
-            )
+            logger_UDPHandler.debug(f"collector_data_with_meta: {collector_data_with_meta}")
 
             # Setting attirbutes for the delta timestamp decorator
 
@@ -487,9 +465,7 @@ class UDPHandler(BaseDataHandler):
             weather_data["elevation"] = data.get("station_elevation")
 
             # Calculate additional weather metrics
-            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
-                weather_data
-            )
+            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
             fields.update(additional_metrics)
 
             # Extract station information
@@ -557,9 +533,7 @@ class UDPHandler(BaseDataHandler):
             self.current_timestamp = timestamp
 
         else:
-            logger_UDPHandler.warning(
-                f"Invalid or incomplete obs_st data received: {full_data}"
-            )
+            logger_UDPHandler.warning(f"Invalid or incomplete obs_st data received: {full_data}")
 
     # @utils.measure_execution_time("handle_obs_air")
     @utils.calculate_timestamp_delta("handle_obs_air")
@@ -608,9 +582,7 @@ class UDPHandler(BaseDataHandler):
             weather_data["elevation"] = data.get("station_elevation")
 
             # Calculate additional weather metrics
-            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
-                weather_data
-            )
+            additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
             fields.update(additional_metrics)
 
             # Extract station information
@@ -678,9 +650,7 @@ class UDPHandler(BaseDataHandler):
             self.current_timestamp = timestamp
 
         else:
-            logger_UDPHandler.warning(
-                f"Invalid or incomplete obs_air data received: {full_data}"
-            )
+            logger_UDPHandler.warning(f"Invalid or incomplete obs_air data received: {full_data}")
 
     # @utils.measure_execution_time("handle_obs_sky")
     @utils.calculate_timestamp_delta("handle_obs_sky")
@@ -791,6 +761,4 @@ class UDPHandler(BaseDataHandler):
             self.current_timestamp = timestamp
 
         else:
-            logger_UDPHandler.warning(
-                f"Invalid or incomplete obs_sky data received: {full_data}"
-            )
+            logger_UDPHandler.warning(f"Invalid or incomplete obs_sky data received: {full_data}")

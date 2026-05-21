@@ -3,21 +3,21 @@
 """
 WeatherFlow Collector Data Handlers
 
-This module forms a part of the WeatherFlow Collector system, a robust application designed to 
-gather, process, and store weather data from various sources. It caters to diverse data types 
+This module forms a part of the WeatherFlow Collector system, a robust application designed to
+gather, process, and store weather data from various sources. It caters to diverse data types
 and formats, making it an integral component of the WeatherFlow ecosystem.
 
 Key Features:
-- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket 
+- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket
   streams, and REST API responses.
-- Data normalization: Transforms disparate data formats into a unified structure suitable for 
+- Data normalization: Transforms disparate data formats into a unified structure suitable for
   storage and analysis.
-- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient 
+- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient
   data management and retrieval.
 
 Usage:
-This module is used within the WeatherFlow Collector system and requires data inputs from 
-UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with 
+This module is used within the WeatherFlow Collector system and requires data inputs from
+UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with
 appropriate configurations for each data source and the InfluxDB instance.
 
 Dependencies:
@@ -34,43 +34,36 @@ Classes:
 - InfluxDBStorage: Interfaces with InfluxDB for data storage.
 
 Methods:
-Each class contains specific methods for processing its designated data type and communicating 
-with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(), 
+Each class contains specific methods for processing its designated data type and communicating
+with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(),
 and save_data().
 
 Author: [Your Name or Team's Name]
 Last Update: [Last Update Date]
 
 Note:
-This module is part of the WeatherFlow Collector system and is not intended to be used as a 
-standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data 
+This module is part of the WeatherFlow Collector system and is not intended to be used as a
+standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data
 streams.
 """
 
-import config
-
-from influxdb_client import InfluxDBClient, Point, WriteOptions, DeleteService
-from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
-
+import asyncio
+import inspect
+import json
+import os
 
 # from influxdb_client.client.write_api import ASYNCHRONOUS
-
-
 # Import necessary libraries for InfluxDB communication and others
-
 import time
-import pytz
-from datetime import datetime, timedelta
-import json
-import inspect
-import os
-import asyncio
 import traceback
+from datetime import datetime
 
+from influxdb_client import Point, WriteOptions
+from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
 
+import config
 import logger
 import utils.utils as utils
-
 
 logger_InfluxDBStorage = logger.get_module_logger(__name__ + ".InfluxDBStorage")
 
@@ -92,9 +85,7 @@ class InfluxDBStorage:
             max_close_wait=config.WEATHERFLOW_COLLECTOR_STORAGE_INFLUXDB_MAX_CLOSE_WAIT,
         )
 
-        self.client = InfluxDBClientAsync(
-            url=url, token=token, org=org, enable_gzip=True
-        )
+        self.client = InfluxDBClientAsync(url=url, token=token, org=org, enable_gzip=True)
 
         # self.write_api = self.write_api(write_options)
 
@@ -181,10 +172,7 @@ class InfluxDBStorage:
                 points.append(point)
 
                 # Check for primary data source and create a secondary point if necessary
-                if (
-                    sorted_tags.get("collector_type")
-                    == config.WEATHERFLOW_COLLECTOR_PRIMARY_SOURCE
-                ):
+                if sorted_tags.get("collector_type") == config.WEATHERFLOW_COLLECTOR_PRIMARY_SOURCE:
                     # Modify the collector_type for the secondary data point
                     tags_copy = dict(sorted_tags)
                     tags_copy["collector_type"] = "primary"
@@ -203,9 +191,7 @@ class InfluxDBStorage:
             # Write all points in the chunk to InfluxDB
             if points:
                 await asyncio.wait_for(
-                    self.write_api.write(
-                        bucket=self.bucket, record=points, write_precision="s"
-                    ),
+                    self.write_api.write(bucket=self.bucket, record=points, write_precision="s"),
                     timeout=30,  # Specify timeout duration in seconds
                 )
 
@@ -216,9 +202,7 @@ class InfluxDBStorage:
 
         except Exception as e:
             tb = traceback.format_exc()
-            logger_InfluxDBStorage.error(
-                f"Error writing chunk to InfluxDB: {e}\nTraceback:\n{tb}"
-            )
+            logger_InfluxDBStorage.error(f"Error writing chunk to InfluxDB: {e}\nTraceback:\n{tb}")
 
     async def save_data(self, measurement, tags, fields, timestamp=None):
         # Perform data structure tracking only if enabled in config
@@ -249,9 +233,7 @@ class InfluxDBStorage:
                         "type": type(value).__name__,
                         "callers": set(),
                     }
-                self.data_structure[measurement]["tags"][tag]["callers"].add(
-                    caller_info
-                )
+                self.data_structure[measurement]["tags"][tag]["callers"].add(caller_info)
 
             for field, value in fields.items():
                 if field not in self.data_structure[measurement]["fields"]:
@@ -259,14 +241,10 @@ class InfluxDBStorage:
                         "type": type(value).__name__,
                         "callers": set(),
                     }
-                self.data_structure[measurement]["fields"][field]["callers"].add(
-                    caller_info
-                )
+                self.data_structure[measurement]["fields"][field]["callers"].add(caller_info)
 
         try:
-            logger_InfluxDBStorage.debug(
-                f"Received data for measurement '{measurement}':"
-            )
+            logger_InfluxDBStorage.debug(f"Received data for measurement '{measurement}':")
             logger_InfluxDBStorage.debug(f"Tags: {tags}")
             logger_InfluxDBStorage.debug(f"Fields: {fields}")
 
@@ -276,24 +254,22 @@ class InfluxDBStorage:
 
             if timestamp is None:
                 timestamp = int(time.time())  # Current time in epoch seconds
-                logger_InfluxDBStorage.debug(
-                    "Timestamp not provided, using current time"
-                )
+                logger_InfluxDBStorage.debug("Timestamp not provided, using current time")
             else:
                 # Ensure timestamp is an integer, not float
                 timestamp = int(timestamp)
-                
+
                 # Validate timestamp is within reasonable range (not too far in future/past)
                 current_time = int(time.time())
                 max_future_time = current_time + 86400  # 24 hours in future
                 min_past_time = current_time - 31536000  # 1 year in past
-                
+
                 if timestamp > max_future_time or timestamp < min_past_time:
                     logger_InfluxDBStorage.warning(
                         f"Timestamp {timestamp} is outside reasonable range. Using current time instead."
                     )
                     timestamp = current_time
-                
+
                 logger_InfluxDBStorage.debug(f"Converted timestamp to integer: {timestamp}")
 
             # Sort tags for consistency
@@ -307,9 +283,7 @@ class InfluxDBStorage:
                 point.field(field, value)
             point.time(timestamp, write_precision="s")
 
-            await self.write_api.write(
-                bucket=self.bucket, record=point, write_precision="s"
-            )
+            await self.write_api.write(bucket=self.bucket, record=point, write_precision="s")
             logger_InfluxDBStorage.debug("Data point written to InfluxDB")
 
             # Check for primary data source and send a second copy if matched
@@ -340,9 +314,7 @@ class InfluxDBStorage:
 
         except Exception as e:
             tb = traceback.format_exc()  # This gets the full traceback
-            logger_InfluxDBStorage.error(
-                f"Error writing to InfluxDB: {e}\nTraceback:\n{tb}"
-            )
+            logger_InfluxDBStorage.error(f"Error writing to InfluxDB: {e}\nTraceback:\n{tb}")
 
     async def handle_delete(self, delete_instructions):
         # Extract delete instructions
@@ -390,9 +362,7 @@ class InfluxDBStorage:
         collector_type = metadata.get("collector_type")
         metric_name = f"update_{collector_type}"
 
-        logger_InfluxDBStorage.debug(
-            f"Received data for collector type: {collector_type}"
-        )
+        logger_InfluxDBStorage.debug(f"Received data for collector type: {collector_type}")
 
         tasks = []
 
@@ -526,9 +496,7 @@ class InfluxDBStorage:
                 ]:
                     # Extract class and method name if it's a class method
                     if "self" in frame_info.frame.f_locals:
-                        caller_class = frame_info.frame.f_locals[
-                            "self"
-                        ].__class__.__name__
+                        caller_class = frame_info.frame.f_locals["self"].__class__.__name__
                         return f"{caller_class}.{frame_info.function}"
                     else:  # For standalone functions
                         return frame_info.function

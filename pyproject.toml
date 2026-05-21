@@ -1,0 +1,59 @@
+[project]
+name = "weatherflow-collector"
+version = "0.1.0"
+description = "WeatherFlow Collector — gathers, processes, and distributes meteorological data from WeatherFlow REST, WebSocket, and UDP sources."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+dependencies = [
+    "requests==2.32.3",
+    "aiohttp==3.9.5",
+    "influxdb-client==1.44.0",
+    "mysql-connector-python==8.4.0",
+    "pandas==2.2.2",
+    "pytz==2024.1",
+    "websockets==12.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+    "docs",
+    "grafana",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line length handled by formatter
+    # The rules below flag legacy patterns that need human judgement to fix
+    # safely (they touch runtime behavior). Revisit when refactoring.
+    "B007",  # unused loop control variable
+    "B905",  # zip() without explicit strict=
+    "F402",  # import shadowed by loop variable
+    "F811",  # redefinition of unused name
+    "F841",  # local variable assigned but never used
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/handlers/__init__.py" = ["F401"]  # re-exports for the package's public API
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

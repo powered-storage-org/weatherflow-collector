@@ -3,21 +3,21 @@
 """
 WeatherFlow Collector Data Handlers
 
-This module forms a part of the WeatherFlow Collector system, a robust application designed to 
-gather, process, and store weather data from various sources. It caters to diverse data types 
+This module forms a part of the WeatherFlow Collector system, a robust application designed to
+gather, process, and store weather data from various sources. It caters to diverse data types
 and formats, making it an integral component of the WeatherFlow ecosystem.
 
 Key Features:
-- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket 
+- Multi-source data handling: Capable of processing data from UDP broadcasts, WebSocket
   streams, and REST API responses.
-- Data normalization: Transforms disparate data formats into a unified structure suitable for 
+- Data normalization: Transforms disparate data formats into a unified structure suitable for
   storage and analysis.
-- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient 
+- InfluxDB integration: Seamlessly stores processed data in InfluxDB, ensuring efficient
   data management and retrieval.
 
 Usage:
-This module is used within the WeatherFlow Collector system and requires data inputs from 
-UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with 
+This module is used within the WeatherFlow Collector system and requires data inputs from
+UDP broadcasts, WebSocket connections, or RESTful APIs. It should be initialized with
 appropriate configurations for each data source and the InfluxDB instance.
 
 Dependencies:
@@ -34,43 +34,26 @@ Classes:
 - InfluxDBStorage: Interfaces with InfluxDB for data storage.
 
 Methods:
-Each class contains specific methods for processing its designated data type and communicating 
-with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(), 
+Each class contains specific methods for processing its designated data type and communicating
+with the InfluxDB. Key methods include process_data(), handle_evt_strike(), handle_obs_st(),
 and save_data().
 
 Author: [Your Name or Team's Name]
 Last Update: [Last Update Date]
 
 Note:
-This module is part of the WeatherFlow Collector system and is not intended to be used as a 
-standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data 
+This module is part of the WeatherFlow Collector system and is not intended to be used as a
+standalone script. It requires a running instance of InfluxDB and access to WeatherFlow data
 streams.
 """
 
-import config
-
-from utils.calculate_weather_metrics import CalculateWeatherMetrics
 
 # Import necessary libraries for InfluxDB communication and others
 
-import time
-import pytz
-from datetime import datetime, timedelta
-import json
-import inspect
-import os
-import asyncio
-import traceback
-
-import multiprocessing
-
 # from concurrent.futures import ThreadPoolExecutor
-
-from concurrent.futures import ProcessPoolExecutor
-
-
 import logger
 import utils.utils as utils
+from utils.calculate_weather_metrics import CalculateWeatherMetrics
 
 logger_BaseDataHandler = logger.get_module_logger(__name__ + ".BaseDataHandler")
 
@@ -155,9 +138,7 @@ class RESTObservationsDeviceHandler(BaseDataHandler):
             logger_RESTObservationsDeviceHandler.debug(f"Mapped 'obs' fields: {fields}")
         else:
             # Log when obs_data is empty or not present
-            logger_RESTObservationsDeviceHandler.debug(
-                "No 'obs' data to map in full_data"
-            )
+            logger_RESTObservationsDeviceHandler.debug("No 'obs' data to map in full_data")
 
         # Merge summary fields from the 'data' with fields
         summary = full_data.get("data", {}).get("summary", {})
@@ -172,9 +153,7 @@ class RESTObservationsDeviceHandler(BaseDataHandler):
 
         # Additional processing: pressure trend mapping, weather metrics, etc.
         trend_mapping = {"falling": -1, "steady": 0, "rising": 1}
-        fields["pressure_trend"] = trend_mapping.get(
-            fields.get("pressure_trend", "steady"), 0
-        )
+        fields["pressure_trend"] = trend_mapping.get(fields.get("pressure_trend", "steady"), 0)
 
         # Extract weather data for additional calculations
         weather_data_keys = [
@@ -186,9 +165,7 @@ class RESTObservationsDeviceHandler(BaseDataHandler):
         weather_data = {k: fields[k] for k in weather_data_keys if k in fields}
         weather_data["elevation"] = station_info.get("station_elevation", 0)
 
-        additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(
-            weather_data
-        )
+        additional_metrics = CalculateWeatherMetrics.calculate_weather_metrics(weather_data)
         fields.update(additional_metrics)
 
         # Create tags using 'metadata' and 'station_info'
@@ -237,9 +214,7 @@ class RESTObservationsDeviceHandler(BaseDataHandler):
         }
 
         # Publish the data using the event manager
-        await self.event_manager.publish(
-            "influxdb_storage_event", collector_data_with_meta
-        )
+        await self.event_manager.publish("influxdb_storage_event", collector_data_with_meta)
 
         # Loop through tags and set them as attributes
         for key, value in tags.items():
@@ -249,5 +224,5 @@ class RESTObservationsDeviceHandler(BaseDataHandler):
         self.current_timestamp = timestamp
 
         logger_RESTObservationsDeviceHandler.debug(
-            f"Published weatherflow_obs data to event manager"
+            "Published weatherflow_obs data to event manager"
         )

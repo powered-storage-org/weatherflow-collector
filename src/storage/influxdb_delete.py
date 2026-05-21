@@ -1,11 +1,14 @@
 from datetime import datetime, timedelta
+
 import pytz
-from influxdb_client import InfluxDBClient, DeleteService
+from influxdb_client import InfluxDBClient
 
 # Configuration variables
 WEATHERFLOW_COLLECTOR_INFLUXDB_BUCKET = "weatherflow2"
 WEATHERFLOW_COLLECTOR_INFLUXDB_ORG = "Tyle"
-WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN = "TbVVRF66YnSSe8Ix_whNBsqZJN0r8fbq5It7RLJvONX0ZyMBCu7NjvlAuDmGlj0UWgpMiLopWbIMEvs27dSoBA=="
+WEATHERFLOW_COLLECTOR_INFLUXDB_TOKEN = (
+    "TbVVRF66YnSSe8Ix_whNBsqZJN0r8fbq5It7RLJvONX0ZyMBCu7NjvlAuDmGlj0UWgpMiLopWbIMEvs27dSoBA=="
+)
 WEATHERFLOW_COLLECTOR_INFLUXDB_URL = "http://build01.tylephony.com:8086"
 
 # Calculate current time and 10 days later in RFC3339

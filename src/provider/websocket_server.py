@@ -1,17 +1,14 @@
 import asyncio
-import websockets
 import json
-import urllib.parse
 import time
-import sys
+
+import websockets
 
 import config
-import utils.utils as utils
 import logger
+import utils.utils as utils
 
-logger_WebSocketServerProvider = logger.get_module_logger(
-    __name__ + ".WebSocketServerProvider"
-)
+logger_WebSocketServerProvider = logger.get_module_logger(__name__ + ".WebSocketServerProvider")
 
 
 class WebSocketServerProvider:
@@ -65,9 +62,7 @@ class WebSocketServerProvider:
             await websocket.close(code=1001, reason="Connection limit reached")
             return
 
-        logger_WebSocketServerProvider.debug(
-            f"Attempting to register client with path: {path}"
-        )
+        logger_WebSocketServerProvider.debug(f"Attempting to register client with path: {path}")
         path_parts = path.strip("/").split("/")
         if len(path_parts) < 2:
             self.default_clients.add(websocket)
@@ -88,9 +83,7 @@ class WebSocketServerProvider:
         for station_info in self.station_metadata.values():
             if station_info.get("enabled", False):  # Check if the station is enabled
                 for device in station_info.get("devices", []):
-                    if device.get("device_id") == device_id and device.get(
-                        "enabled", False
-                    ):
+                    if device.get("device_id") == device_id and device.get("enabled", False):
                         # Register the client if both station and device are enabled
                         self.clients.add((websocket, collector_type, device_id))
                         logger_WebSocketServerProvider.info(
@@ -113,25 +106,17 @@ class WebSocketServerProvider:
             )
         elif websocket in self.default_clients:
             self.default_clients.remove(websocket)
-            logger_WebSocketServerProvider.info(
-                f"Client disconnected from default group."
-            )
+            logger_WebSocketServerProvider.info("Client disconnected from default group.")
         else:
-            logger_WebSocketServerProvider.warning(
-                "Unregister called for unknown client."
-            )
+            logger_WebSocketServerProvider.warning("Unregister called for unknown client.")
 
     async def websocket_handler(self, websocket, path):
         try:
             await self.register(websocket, path)
             async for message in websocket:
-                logger_WebSocketServerProvider.info(
-                    f"Received message from client: {message}"
-                )
+                logger_WebSocketServerProvider.info(f"Received message from client: {message}")
         except websockets.exceptions.ConnectionClosedError as e:
-            logger_WebSocketServerProvider.error(
-                f"WebSocket connection closed unexpectedly: {e}"
-            )
+            logger_WebSocketServerProvider.error(f"WebSocket connection closed unexpectedly: {e}")
         except Exception as e:
             logger_WebSocketServerProvider.error(f"Error in websocket_handler: {e}")
         finally:
@@ -147,32 +132,24 @@ class WebSocketServerProvider:
             self.handle_websocker_collector_data(full_data)
 
     def handle_udp_collector_data(self, full_data):
-        logger_WebSocketServerProvider.debug(
-            f"UDP collector data received: {full_data}"
-        )
+        logger_WebSocketServerProvider.debug(f"UDP collector data received: {full_data}")
         data_type = full_data.get("data", {}).get("type")
 
         if data_type == "rapid_wind":
             formatted_data = self.format_rapid_wind_data(full_data)
             # Assuming a method to map from serial number to device ID
             serial_number = full_data.get("data", {}).get("serial_number")
-            device_id = (
-                self.get_device_id_from_serial(serial_number) if serial_number else None
-            )
+            device_id = self.get_device_id_from_serial(serial_number) if serial_number else None
 
             if device_id is not None:
-                asyncio.create_task(
-                    self.broadcast(formatted_data, "collector_udp", device_id)
-                )
+                asyncio.create_task(self.broadcast(formatted_data, "collector_udp", device_id))
             else:
                 logger_WebSocketServerProvider.debug(
                     "Device ID is unknown or not applicable for UDP collector data"
                 )
 
     def handle_websocker_collector_data(self, full_data):
-        logger_WebSocketServerProvider.debug(
-            f"WebSocket collector data received: {full_data}"
-        )
+        logger_WebSocketServerProvider.debug(f"WebSocket collector data received: {full_data}")
         data_type = full_data.get("data", {}).get("type")
 
         if data_type == "rapid_wind":
@@ -192,9 +169,7 @@ class WebSocketServerProvider:
         if observation and len(observation) == 3:
             timestamp, wind_speed, wind_direction = observation
         else:
-            logger_WebSocketServerProvider.error(
-                "Invalid or incomplete observation data received"
-            )
+            logger_WebSocketServerProvider.error("Invalid or incomplete observation data received")
             return None
 
         client_type_map = {
@@ -242,9 +217,7 @@ class WebSocketServerProvider:
             # Determine the clients to notify based on collector_type and device_id
             clients_to_notify = []
             for client in self.clients:
-                if client[1] == collector_type and (
-                    device_id is None or client[2] == device_id
-                ):
+                if client[1] == collector_type and (device_id is None or client[2] == device_id):
                     clients_to_notify.append(client[0])
 
             logger_WebSocketServerProvider.debug(
@@ -252,9 +225,7 @@ class WebSocketServerProvider:
             )
 
             # Update the client count metric
-            self.metrics_by_client_type[collector_type]["client_count"] = len(
-                clients_to_notify
-            )
+            self.metrics_by_client_type[collector_type]["client_count"] = len(clients_to_notify)
 
             # Calculate the size of the message for metrics
             message_json = json.dumps(message) if isinstance(message, dict) else message
@@ -263,10 +234,7 @@ class WebSocketServerProvider:
             # Broadcast the message to the identified clients
             if clients_to_notify:
                 await asyncio.wait(
-                    [
-                        asyncio.create_task(client.send(message_json))
-                        for client in clients_to_notify
-                    ]
+                    [asyncio.create_task(client.send(message_json)) for client in clients_to_notify]
                 )
                 logger_WebSocketServerProvider.debug(
                     f"Broadcasted message to {collector_type} clients at device ID '{device_id}'"
@@ -276,9 +244,7 @@ class WebSocketServerProvider:
                 self.metrics_by_client_type[collector_type]["message_count"] += 1
 
             else:
-                logger_WebSocketServerProvider.debug(
-                    "No clients to broadcast to for this message"
-                )
+                logger_WebSocketServerProvider.debug("No clients to broadcast to for this message")
 
         except Exception as e:
             logger_WebSocketServerProvider.error(f"Error during message broadcast: {e}")
@@ -308,9 +274,7 @@ class WebSocketServerProvider:
                 rate=self.metrics_by_client_type[collector_type]["message_count"],
                 errors=self.metrics_by_client_type[collector_type]["error_count"],
                 duration=broadcast_duration,
-                client_count=self.metrics_by_client_type[collector_type][
-                    "client_count"
-                ],
+                client_count=self.metrics_by_client_type[collector_type]["client_count"],
                 bytes=message_bytes,  # Transmit the size of the current message
             )
 
@@ -359,16 +323,14 @@ class WebSocketServerProvider:
                     if client[0].closed:
                         self.clients.remove(client)
                         logger_WebSocketServerProvider.info(
-                            f"Removed closed connection from active clients."
+                            "Removed closed connection from active clients."
                         )
 
                 for client in list(self.default_clients):
                     if client.closed:
                         self.default_clients.remove(client)
                         logger_WebSocketServerProvider.info(
-                            f"Removed closed connection from default clients."
+                            "Removed closed connection from default clients."
                         )
             except Exception as e:
-                logger_WebSocketServerProvider.error(
-                    f"Error during connection cleanup: {e}"
-                )
+                logger_WebSocketServerProvider.error(f"Error during connection cleanup: {e}")
