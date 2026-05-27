@@ -284,7 +284,10 @@ class RESTForecastsHandler(BaseDataHandler):
         data_batch = []  # List to accumulate data points for batch processing
 
         for index, hourly in enumerate(hourly_forecasts):
-            fields = {field: value for field, value in hourly.items()}
+            fields = dict(hourly)
+            # InfluxDB reserves "time" for the point timestamp; drop it from fields
+            # to avoid a 422 "invalid field name" rejection on write.
+            timestamp = fields.pop("time", None)
 
             # Convert sea level pressure to station pressure if elevation is available
             sea_level_pressure = hourly.get("sea_level_pressure")
@@ -295,8 +298,6 @@ class RESTForecastsHandler(BaseDataHandler):
                     )
                 )
                 fields["calculated_station_pressure"] = station_pressure
-
-            timestamp = hourly.get("time")
 
             # Calculate the "days out" for this forecast
             if timestamp is not None:
