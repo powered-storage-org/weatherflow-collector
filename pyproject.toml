@@ -1,6 +1,6 @@
 [project]
 name = "weatherflow-collector"
-version = "0.1.0"
+version = "0.1.1"
 description = "WeatherFlow Collector — gathers, processes, and distributes meteorological data from WeatherFlow REST, WebSocket, and UDP sources."
 readme = "README.md"
 license = { file = "LICENSE" }
