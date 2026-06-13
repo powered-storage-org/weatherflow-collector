@@ -57,6 +57,17 @@ from utils.calculate_weather_metrics import CalculateWeatherMetrics
 
 logger_BaseDataHandler = logger.get_module_logger(__name__ + ".BaseDataHandler")
 
+# WS `summary` block keys that name the same metric as REST observations under
+# a shorter name. Apply this aliasing so alerts and dashboards can query one
+# field name regardless of which collector wrote the row.
+_WS_SUMMARY_ALIASES = {
+    "strike_count_1h": "lightning_strike_count_last_1hr",
+    "strike_count_3h": "lightning_strike_count_last_3hr",
+    "strike_last_epoch": "lightning_strike_last_epoch",
+    "strike_last_dist": "lightning_strike_last_distance",
+    "precip_total_1h": "precip_accum_last_1hr",
+}
+
 
 class BaseDataHandler:
     def process_data(self, data):
@@ -398,9 +409,10 @@ class WebSocketHandler(BaseDataHandler):
             summary = data.get("summary", {})
             trend_mapping = {"falling": -1, "steady": 0, "rising": 1, "unknown": None}
             fields["pressure_trend"] = trend_mapping.get(summary.get("pressure_trend"), None)
-            for key in summary:
-                if key != "pressure_trend" and key != "raining_minutes":
-                    fields[key] = summary[key]
+            for key, value in summary.items():
+                if key in ("pressure_trend", "raining_minutes"):
+                    continue
+                fields[_WS_SUMMARY_ALIASES.get(key, key)] = value
 
             # Extract elevation and calculate additional metrics
             elevation = full_data.get("station_info", {}).get("station_elevation")
@@ -717,7 +729,7 @@ class WebSocketHandler(BaseDataHandler):
         strike_type = data.get("strike_type")
 
         fields = {
-            "time": time,
+            "timestamp": time,
             "latitude": lat,
             "longitude": lon,
             "magnitude": mag,

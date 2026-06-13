@@ -245,7 +245,7 @@ class CalculateWeatherMetrics:
             )
             heat_index_celsius = (heat_index_fahrenheit - 32) * 5 / 9
             return heat_index_celsius
-        return temperature
+        return None
 
     @staticmethod
     def calculate_absolute_humidity(temperature, relative_humidity):
@@ -295,7 +295,7 @@ class CalculateWeatherMetrics:
                 + (0.3965 * temperature * (wind_speed_kmh**0.16))
             )
             return wind_chill
-        return temperature
+        return None
 
     @staticmethod
     def calculate_beaufort_scale_rating(wind_speed_mps):
