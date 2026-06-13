@@ -48,7 +48,7 @@ streams.
 """
 
 # from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytz
 from pytz import timezone
@@ -164,6 +164,12 @@ class RESTStatsHandler:
         station_time_zone = station_info.get("time_zone", "UTC")  # Default to UTC if not provided
         tz = timezone(station_time_zone)
 
+        max_age_days = config.WEATHERFLOW_COLLECTOR_HANDLER_REST_STATS_MAX_AGE_DAYS
+        retention_cutoff_utc = (
+            datetime.now(pytz.utc) - timedelta(days=max_age_days) if max_age_days > 0 else None
+        )
+        dropped_old = 0
+
         for entry in category_data:
             if len(entry) == 0:
                 continue
@@ -182,6 +188,13 @@ class RESTStatsHandler:
 
             # Convert timestamp to UTC if necessary
             timestamp_utc = timestamp.astimezone(pytz.utc)
+
+            # Skip points that fall outside the bucket's retention window so we
+            # don't trigger InfluxDB 422 ("partial write: dropped N points
+            # outside retention policy") on every cycle.
+            if retention_cutoff_utc is not None and timestamp_utc < retention_cutoff_utc:
+                dropped_old += 1
+                continue
 
             epoch_timestamp = int(timestamp_utc.timestamp())
 
@@ -247,5 +260,12 @@ class RESTStatsHandler:
             }
 
             processed_data.append(data_point)
+
+        if dropped_old:
+            logger_RESTStatsHandler.debug(
+                f"Skipped {dropped_old} {category_name} point(s) older than "
+                f"{max_age_days}d (outside InfluxDB retention) for station "
+                f"{metadata.get('station_id')}"
+            )
 
         return processed_data

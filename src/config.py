@@ -247,6 +247,15 @@ WEATHERFLOW_COLLECTOR_HANDLER_REST_STATS_SUPPRESS_WARNINGS_ENABLED = (
     == "true"
 )
 
+# Drop stats points older than this. InfluxDB rejects writes outside the
+# bucket's retention policy with HTTP 422; the stats endpoint returns
+# multi-year history, so without this filter every cycle hits that error.
+# Set to 0 to disable filtering. Default 360 sits safely under the
+# common 365-day retention.
+WEATHERFLOW_COLLECTOR_HANDLER_REST_STATS_MAX_AGE_DAYS = int(
+    os.getenv("WEATHERFLOW_COLLECTOR_HANDLER_REST_STATS_MAX_AGE_DAYS", "360")
+)
+
 
 # Storage File Enablement
 
