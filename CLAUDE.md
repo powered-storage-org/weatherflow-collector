@@ -1,5 +1,34 @@
 # CLAUDE.md
 
+<!-- agent-core-onboarding:start -->
+## ⚠️ First: install the agent-core baseline
+
+Before working in this repository with an AI agent (Claude Code / Codex / Gemini
+CLI), install the **powered-storage-org `agent-core` baseline** so your agent
+loads our shared org standards (signed conventional commits, the gated
+`ci.yaml` → GHCR release flow, the standard `Makefile`, container hardening).
+Without it your agent has no shared rules and will drift from org conventions.
+
+```sh
+# 1. Install the baseline once (Linux/macOS; Windows: pwsh ./install.ps1)
+git clone git@github.com:powered-storage-org/agent-core.git
+cd agent-core && ./install.sh
+
+# 2. Link it into THIS repo, then point your agent at its adapter
+cd "$OLDPWD"            # back to this repo
+~/.org-ai/install.sh --link
+```
+
+Then start coding with your agent pointed at its adapter:
+
+- Claude Code → `~/.org-ai/claude/CLAUDE.md`
+- Codex → `~/.org-ai/codex/AGENTS.md`
+- Gemini CLI → `~/.org-ai/gemini/GEMINI.md`
+
+Full project list & onboarding details: `~/.org-ai/docs/repositories.md`.
+<!-- agent-core-onboarding:end -->
+
+
 Project guide for Claude Code when working in this repository.
 
 ## Project
